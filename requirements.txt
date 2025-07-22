@@ -1,0 +1,9 @@
+streamlit
+pandas
+sqlalchemy
+pyodbc
+google-generativeai
+pyodbc
+plotly
+numpy
+flask
