@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect
 import pyodbc
 import subprocess
 import webbrowser
+import time 
+import threading
 
 app = Flask(__name__)
 
@@ -42,5 +44,11 @@ def login():
 
 # ✅ THIS PART WAS MISSING!
 if __name__ == '__main__':
+    def open_browser():
+        time.sleep(1)  # Delay to ensure Flask has started
+        webbrowser.open("http://127.0.0.1:5000")
+
+    threading.Thread(target=open_browser).start()    
     print("🚀 Flask server is starting...")
-    app.run(debug=True) 
+    app.run(debug=True, host='0.0.0.0', port=5000) 
+    
