@@ -14,7 +14,7 @@ import plotly.graph_objects as go
 import numpy as np
 
 # Configure Gemini
-genai.configure(api_key="AIzaSyAur1ARNI5nZts-_S_bBtTrqdneQnpQU5w")
+genai.configure(api_key="AIzaSyB39PXTyMhzC6kQQh21dj-eUpOh0i47-zY")
 model = genai.GenerativeModel("gemini-1.5-flash")
 st.set_page_config("QueryGenie", layout="wide")
 # Session states
@@ -27,10 +27,10 @@ if "last_query" not in st.session_state:
 
 # SSMS config
 ssms_servers = [{
-    "name": "VIJAY\\SQLEXPRESS",   # or just "SQLEXPRESS"
-    "server": "VIJAY\SQLEXPRESS,52235",       # dynamically set IP
-    "username": "sa",
-    "password": "abcd123456"
+    "name": "EC2_SQLSERVER",   # or just "SQLEXPRESS"
+    "server": "localhost,1433",       # dynamically set IP
+    "username": "SA",
+    "password": "Admin@1234"
 }]
 
 # Helper to fetch schema
@@ -38,7 +38,7 @@ ssms_servers = [{
 def fetch_ssms_schema():
     data = []
     for s in ssms_servers:
-        conn = f"Driver={{SQL Server}};Server={s['server']};UID={s['username']};PWD={s['password']};Encrypt=no;"
+        conn = f"Driver={{ODBC Driver 17 for SQL Server}};Server={s['server']};UID={s['username']};PWD={s['password']};Encrypt=no;"
         with pyodbc.connect(conn) as c:
             cursor = c.cursor()
             cursor.execute("SELECT name FROM sys.databases WHERE name NOT IN ('master','tempdb','model','msdb')")
