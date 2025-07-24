@@ -4,14 +4,27 @@ import subprocess
 import webbrowser
 import time 
 import threading
+import socket
+import requests
 
+def get_public_ip():
+    return requests.get('https://api.ipify.org').text
+
+public_ip = get_public_ip()
+print(public_ip)
 app = Flask(__name__)
+
+
+
+hostname = socket.gethostname()
+local_ip = socket.gethostbyname(hostname)
+
 
 # --- DB Function ---
 def get_user_credentials():
     conn = pyodbc.connect(
         'DRIVER={ODBC Driver 17 for SQL Server};'
-        'SERVER=localhost,1433;'
+        'SERVER=EC2AMAZ-89NHHVE\\SQLEXPRESS,50214;'
         'DATABASE=Mahindra;'
         'Trusted_Connection=yes;'
     )
@@ -31,12 +44,12 @@ def login():
         if username in credentials and credentials[username] == password:
             # Launch Streamlit using `python -m streamlit`
             subprocess.Popen([
-                 "streamlit", "run", "context_based_genie.py","--server.port","8501","--server.address","0.0.0.0",
-                 "--server.headless", "true"
+                 "streamlit", "run", "context_based_adventure.py","--server.port","8501","--server.address","0.0.0.0",
+                 "--server.headless", "False"
             ])
 
             # Redirect browser to the Streamlit app
-            return redirect("http://localhost:8501")
+            return redirect(f"http://{public_ip}:8501")
         else:
             return render_template("login.html", error="Invalid credentials")
 
@@ -46,7 +59,9 @@ def login():
 if __name__ == '__main__':
     def open_browser():
         time.sleep(1)  # Delay to ensure Flask has started
-        webbrowser.open("http://127.0.0.1:5000")
+        # webbrowser.open("http://127.0.0.1:5000")
+        webbrowser.open(f"http://{public_ip}:5000")
+        print(f"DataGenie Running on http://{public_ip}:5000")
 
     threading.Thread(target=open_browser).start()    
     print("🚀 Flask server is starting...")
