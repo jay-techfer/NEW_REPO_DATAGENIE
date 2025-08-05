@@ -15,11 +15,45 @@ import numpy as np
 import socket
 import requests
 from dotenv import load_dotenv
+from cryptography.fernet import Fernet
 
-load_dotenv(dotenv_path="C:/Users/Administrator/Desktop/Genai/NEW_REPO_DATAGENIE/key.env")
+# Load session token securely
+if not os.path.exists("session_token.json"):
+    st.error("❌ No active session. Please log in.")
+    st.stop()
+
+with open("session_token.json", "r") as f:
+    session_data = json.load(f)
+
+encrypted_data = session_data.get('encrypted_data', None)
+
+# Your Fernet key (should match the one used in login.py)
+fernet_key = b'Sv_cBtT5H5i_fv3sPvRrAe_2z6WRnqbmq-rmfxUyiGQ='
+cipher_suite = Fernet(fernet_key)
+
+try:
+    # Decrypt and load session info
+    decrypted_text = cipher_suite.decrypt(encrypted_data.encode()).decode()
+    session_info = json.loads(decrypted_text)
+
+    username = session_info.get("username")
+    token = session_info.get("token")
+
+    # st.success(f"✅ Welcome, {username}")
+
+    # Optionally delete session file after successful load
+    os.remove("session_token.json")
+
+except Exception as e:
+    st.error("❌ Decryption failed. Invalid or tampered token.")
+    st.stop()
+
+
+load_dotenv(dotenv_path="key.env")
 
 # Fetch the API key from the environment
 api_key = os.getenv("GEMINI_API_KEY")
+print(api_key)
 # Configure Gemini
 
 def get_public_ip():
@@ -32,6 +66,15 @@ print(public_ip)
 genai.configure(api_key=api_key)
 model = genai.GenerativeModel("gemini-1.5-flash")
 st.set_page_config("DataGenie", layout="wide")
+#hide_streamlit_style = """
+ #   <style>
+   # #MainMenu {visibility: hidden;}
+  #  footer {visibility: hidden;}
+ #   header {visibility: hidden;}
+#    </style>
+#"""
+
+#st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 # Session states
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
@@ -44,14 +87,12 @@ if "last_query" not in st.session_state:
 hostname = socket.gethostname()
 local_ip = socket.gethostbyname(hostname)
 
-ssms_servers = [
-    {
-        "name": "EC2AMAZ-89NHHVE\\SQLEXPRESS01",   # or just "SQLEXPRESS"
-        "server": "EC2AMAZ-89NHHVE\\SQLEXPRESS,50214",         # dynamically set IP
-        "username": "GenAI",
-        "password": "Abcd@123456"
-    }
-]
+ssms_servers = [{
+    "name": "EC2_SQLSERVER",   # or just "SQLEXPRESS"
+    "server": "localhost,1433",       # dynamically set IP
+    "username": "SA",
+    "password": "Admin@1234"
+}]
 
 
 # Global DataFrames
@@ -62,7 +103,7 @@ def fetch_ssms_schema():
     data = []
     for s in ssms_servers:
         try:
-            base_conn = f"Driver={{SQL Server}};Server={s['server']};UID={s['username']};PWD={s['password']};Encrypt=no;"
+            base_conn = f"Driver={{ODBC Driver 17 for SQL Server}};Server={s['server']};UID={s['username']};PWD={s['password']};"
             with pyodbc.connect(base_conn) as c:
                 cursor = c.cursor()
                 print("cursor")
@@ -73,7 +114,7 @@ def fetch_ssms_schema():
                 dbs = [r[0] for r in cursor.fetchall()]
                 for db in dbs:
                     # ✅ Build correct connection string for specific database
-                    db_conn = f"Driver={{SQL Server}};Server={s['server']};Database={db};UID={s['username']};PWD={s['password']};Encrypt=no;"
+                    db_conn = f"Driver={{ODBC Driver 17 for SQL Server}};Server={s['server']};Database={db};UID={s['username']};PWD={s['password']}"
                     engine = create_engine(
                         f"mssql+pyodbc:///?odbc_connect={urllib.parse.quote_plus(db_conn)}"
                     )
@@ -81,13 +122,14 @@ def fetch_ssms_schema():
                         "SELECT TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS",
                         engine
                     )
-                    print("SQL Read")
+                    
                     df['SERVER'] = s['name']
                     df['DATABASE'] = 'AdventureWorks2022'  # ✅ use actual db name
                     data.append(df)
-                    print("data appened")
+                   
         except Exception as e:
-            st.warning(f"SSMS Error: {e}")
+            st.warning(f"Something went wrong,please try again")
+	   # print("SSMS Error: ",e)
     return pd.concat(data, ignore_index=True) if data else pd.DataFrame()
 
 
@@ -116,16 +158,15 @@ SSMS Schema: {ssms_schema}
     return model.generate_content(prompt).text
 
 if ssms_schema_df.empty:
-    with st.spinner("Fetching SSMS schema..."):
+    with st.spinner("Installing dependencies..."):
         ssms_schema_df = fetch_ssms_schema()
     # print(ssms_schema_df)
     print(ssms_schema_df)
 
-st.title("DataGenie")
-
+st.image('techfer_logo_new.png',width=150)
 # Sidebar - SQL input and results
 with st.sidebar:
-    st.header("🔍 Get Data        ") 
+    st.title("DataGenie  ") 
 
     nl_query = st.text_area("Enter your question ")
     
@@ -150,7 +191,6 @@ with st.sidebar:
                     f"Server={server_cfg['server']};"
                     f"UID={server_cfg['username']};"
                     f"PWD={server_cfg['password']};"
-                    f"Encrypt=no;TrustServerCertificate=yes;"
                 )
                 quoted_conn = urllib.parse.quote_plus(conn_str)
                 engine = create_engine(f"mssql+pyodbc:///?odbc_connect={quoted_conn}")
@@ -229,9 +269,9 @@ with st.sidebar:
                         st.plotly_chart(fig, use_container_width=True)
             except Exception as e:
                 st.error("❌ Chart rendering failed.")
-                st.exception(e)
+               # st.exception(e)
     else:
-        st.info("⚠️ No query data available to generate a chart.")
+        st.info("Please request data to generate a chart.")
 
 # Main chat UI
 

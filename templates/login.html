@@ -3,6 +3,8 @@
   <meta charset="utf-8">
   <title>Datagenie Login</title>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style2.css') }}">
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 </head>
 
 <body>
@@ -48,7 +50,7 @@
           <div class="formbg">
             <div class="formbg-inner padding-horizontal--48">
               <span class="padding-bottom--15">Login In</span>
-              <form id="stripe-login" method="POST" action="/">
+              <form id="stripe-login" method="POST" action="/login">
                 <div class="field padding-bottom--24">
                   <label for="username">Username</label>
                   <input type="text" name="username">
@@ -67,6 +69,7 @@
                     <input type="checkbox" name="checkbox"> Stay signed in for a week
                   </label> -->
                 </div>
+                <div class="g-recaptcha" data-sitekey="6LfkXZQrAAAAANLCHFVeHYym1YO0F_6aa9mcbziC"></div><br>
                 <div class="field padding-bottom--24">
                   <input type="submit" name="submit" value="Continue">
                 </div>

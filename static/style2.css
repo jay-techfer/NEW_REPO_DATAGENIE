@@ -137,6 +137,12 @@ label {
     align-items: center;
 }
 
+.g-recaptcha {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0;
+}
+
 .field input {
     font-size: 16px;
     line-height: 28px;

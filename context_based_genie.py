@@ -14,7 +14,7 @@ import plotly.graph_objects as go
 import numpy as np
 
 # Configure Gemini
-genai.configure(api_key="AIzaSyB39PXTyMhzC6kQQh21dj-eUpOh0i47-zY")
+genai.configure(api_key="AIzaSyC0T1vRMxg8r2Ma75sit71SWFHGyKpwRso")
 model = genai.GenerativeModel("gemini-1.5-flash")
 st.set_page_config("QueryGenie", layout="wide")
 # Session states
@@ -103,6 +103,7 @@ Strict Instructions:
 - Output only the query and nothing else.
 - while generating the query use [Mahindra].[dbo].[table_name]
 
+
 User Question:
 {user_input_add}
 
@@ -111,7 +112,7 @@ Return only the SQL query starting after this line:
 """
     return model.generate_content(prompt).text
 # UI layout
-st.title("🤖 QueryGenie")
+st.title("DataGenie")
 
 # Sidebar - SQL input and results
 with st.sidebar:
