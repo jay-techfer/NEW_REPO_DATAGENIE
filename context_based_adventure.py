@@ -42,7 +42,7 @@ try:
     # st.success(f"✅ Welcome, {username}")
 
     # Optionally delete session file after successful load
-    os.remove("session_token.json")
+   # os.remove("session_token.json")
 
 except Exception as e:
     st.error("❌ Decryption failed. Invalid or tampered token.")
@@ -391,3 +391,4 @@ Respond in 4-5 bullet points with useful analysis/suggestions user aked for.
     st.session_state.chat_history.append({"role": "assistant", "message": reply})
     
     st.rerun()  # Re-render the app to show chat in order
+    os.remove("session_token.json")
