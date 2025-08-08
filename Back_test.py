@@ -25,36 +25,35 @@ import time
 import json
 
 # Load session token securely
-# if not os.path.exists("session_token.json"):
-#     st.error("❌ No active session. Please log in.")
-#     st.stop()
+if not os.path.exists("session_token.json"):
+    st.error("❌ No active session. Please log in.")
+    st.stop()
 
-# with open("session_token.json", "r") as f:
-#     session_data = json.load(f)
+with open("session_token.json", "r") as f:
+    session_data = json.load(f)
 
-# encrypted_data = session_data.get('encrypted_data', None)
+encrypted_data = session_data.get('encrypted_data', None)
 
 # Your Fernet key (should match the one used in login.py)
-# fernet_key = b'Sv_cBtT5H5i_fv3sPvRrAe_2z6WRnqbmq-rmfxUyiGQ='
-# cipher_suite = Fernet(fernet_key)
+fernet_key = b'Sv_cBtT5H5i_fv3sPvRrAe_2z6WRnqbmq-rmfxUyiGQ='
+cipher_suite = Fernet(fernet_key)
 
-# try:
-#     # Decrypt and load session info
-#     decrypted_text = cipher_suite.decrypt(encrypted_data.encode()).decode()
-#     session_info = json.loads(decrypted_text)
+try:
+    # Decrypt and load session info
+    decrypted_text = cipher_suite.decrypt(encrypted_data.encode()).decode()
+    session_info = json.loads(decrypted_text)
 
-#     username = session_info.get("username")
-#     token = session_info.get("token")
+    username = session_info.get("username")
+    token = session_info.get("token")
 
-# st.success(f"✅ Welcome, {username}")
+    # st.success(f"✅ Welcome, {username}")
 
-# Optionally delete session file after successful load
-# os.remove("session_token.json")
+    # Optionally delete session file after successful load
+    # os.remove("session_token.json")
 
-# except Exception as e:
-#     st.error("❌ Decryption failed. Invalid or tampered token.")
-#     st.stop()
-
+except Exception as e:
+    st.error("❌ Decryption failed. Invalid or tampered token.")
+    st.stop()
 # 🔹 Configure Gemini
 genai.configure(api_key="AIzaSyC0T1vRMxg8r2Ma75sit71SWFHGyKpwRso")
 model = genai.GenerativeModel("gemini-1.5-pro")
@@ -105,10 +104,10 @@ local_ip = socket.gethostbyname(hostname)
 
 ssms_servers = [
     {
-        "name": "COSMOS\\SQLEXPRESS01",
-        "server": "COSMOS\SQLEXPRESS01,53112",       # dynamically set IP
-        "username": "sa",
-        "password": "abcd123456"
+        "name": "EC2_SQLSERVER",   # or just "SQLEXPRESS"
+        "server": "localhost,1433",       # dynamically set IP
+        "username": "SA",
+        "password": "Admin@1234"
     }
 ]
 
