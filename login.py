@@ -38,7 +38,7 @@ conn = pyodbc.connect(
 #)
 
 cursor = conn.cursor()
-
+print("cursror connected")
 def get_user_credentials():
 
     cursor.execute("SELECT username, password FROM dbo.login_credentials")
@@ -76,6 +76,7 @@ def login():
 
     # Step 2: Validate username/password
     credentials = get_user_credentials()
+    print("cred connected")
     if username in credentials and credentials[username] == password:
         flash("Login successful ✅")
         print(f"INSERT INTO dbo.login_tracker (username, loginTime) VALUES (?, GETDATE())", (username,))
@@ -103,7 +104,7 @@ def login():
             json.dump(session_data, f)
             print(f'Session token saved for {username}')
 
-        subprocess.Popen(['streamlit', 'run', 'context_based_adventure.py',"--server.port","8501","--server.address","0.0.0.0",
+        subprocess.Popen(['streamlit', 'run', 'rakshita.py',"--server.port","8501","--server.address","0.0.0.0",
                             "--server.headless", "true"])
 
         return redirect(f"http://{public_ip}:8501")

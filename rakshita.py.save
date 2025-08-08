@@ -21,7 +21,6 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from cryptography.fernet import Fernet
 import os
-import time
 import json
 
 # Load session token securely
@@ -261,124 +260,123 @@ with st.sidebar:
 
             if st.button("🎨 Create Chart"):
                 if not x_axis_cols or not y_axis_cols or not chart_prompt:
-	            st.warning("Select X & Y columns and enter chart description.")
-	    	else:
-        	    st.session_state["x_axis_cols"] = x_axis_cols
-	            st.session_state["y_axis_cols"] = y_axis_cols
-	            st.session_state["adv_widgets"] = adv_widgets
-	            st.session_state["chart_prompt"] = chart_prompt
+                    st.warning(
+                        "Select X & Y columns and enter chart description.")
+                else:
+                    st.session_state["x_axis_cols"] = x_axis_cols
+                    st.session_state["y_axis_cols"] = y_axis_cols
+                    st.session_state["adv_widgets"] = adv_widgets
+                    st.session_state["chart_prompt"] = chart_prompt
 
-	            x_list = ", ".join(x_axis_cols)
-	            y_list = ", ".join(y_axis_cols)
-	            widget_list = ", ".join(adv_widgets) if adv_widgets else "None"
+                    x_list = ", ".join(x_axis_cols)
+                    y_list = ", ".join(y_axis_cols)
+                    widget_list = ", ".join(
+                        adv_widgets) if adv_widgets else "None"
 
-	            chart_gen_prompt = f"""
-	                You are a Python data visualization assistant.
+                    chart_gen_prompt = f"""
+                        You are a Python data visualization assistant.
 
-	            The user wants a chart based on this request: {chart_prompt}
+                        The user wants a chart based on this request: {chart_prompt}
 
-	            Selected columns from the DataFrame named `df`:
-	            - X-axis: {x_list}
-	            - Y-axis: {y_list}
+                        Selected columns from the DataFrame named `df`:
+                        - X-axis: {x_list}
+                        - Y-axis: {y_list}
 
-	            Advanced Plotly widgets requested: {widget_list}
+                        Advanced Plotly widgets requested: {widget_list}
 
-	            Instructions:
-	            - Use the existing DataFrame `df` as-is. Do not create or redefine `df` or generate any mock/sample data.
-	            - Use Plotly Express or Plotly Graph Objects.
-	            - If widgets are selected, integrate them.
-	            - Before plotting, drop any rows where required columns (like X, Y, hierarchy path, or value columns) are null, NaN, or blank strings ('').
-	            - Output only the Python code inside a markdown code block.
-	        """
+                        Instructions:
+                        - Use the existing DataFrame `df` as-is. Do not create or redefine `df` or generate any mock/sample data.
+                        - Use Plotly Express or Plotly Graph Objects.
+                        - If widgets are selected, integrate them.
+                        - Before plotting, drop any rows where required columns (like X, Y, hierarchy path, or value columns) are null, NaN, or blank strings ('').
+                        - Output only the Python code inside a markdown code block.
+                        """
 
-	        # ✅ Spinner and timing added here
-	            with st.spinner("Generating chart code..."):
-	                start_time = time.time()
-	                response = model.generate_content(chart_gen_prompt).text
-	                st.info(f"🕒 Code generation took {time.time() - start_time:.2f} seconds")
+                    response = model.generate_content(chart_gen_prompt).text
+                    print("chart code : ", response)
+                    chart_code = re.search(
+                        r"```python(.*?)```", response, re.DOTALL)
 
-	            print("chart code : ", response)
-	            chart_code = re.search(r"```python(.*?)```", response, re.DOTALL)
+                    if chart_code:
+                        st.session_state["generated_chart_code"] = chart_code.group(
+                            1).strip()
+                    else:
+                        st.error("⚠️ Couldn't parse chart code.")
 
-	            if chart_code:
-	                st.session_state["generated_chart_code"] = chart_code.group(1).strip()
-	            else:
-	                st.error("⚠️ Couldn't parse chart code.")
+            # === Create & Store Charts ===
+            if "generated_chart_code" in st.session_state:
+                try:
+                    exec_globals = {"pd": pd, "df": new_df1,
+                                    "px": px, "go": go, "np": np}
+                    exec(
+                        st.session_state["generated_chart_code"], exec_globals)
 
-	# === Create & Store Charts ===
-    	    if "generated_chart_code" in st.session_state:
-	        try:
-	            exec_globals = {"pd": pd, "df": new_df1, "px": px, "go": go, "np": np}
-	            exec(st.session_state["generated_chart_code"], exec_globals)
+                    new_figs = [
+                        exec_globals[name]
+                        for name in exec_globals
+                        if re.match(r"fig\d*$", name) and isinstance(exec_globals[name], go.Figure)
+                    ]
 
-	            new_figs = [
-	                exec_globals[name]
-	                for name in exec_globals
-	                if re.match(r"fig\d*$", name) and isinstance(exec_globals[name], go.Figure)
-	            ]
+                    if new_figs:
+                        st.session_state["chart_metadata"].append({
+                            "code": st.session_state["generated_chart_code"],
+                            "x_cols": x_axis_cols,
+                            "y_cols": y_axis_cols
+                        })
 
-	            if new_figs:
-	                for fig in new_figs:
-	                    st.plotly_chart(fig, use_container_width=True)  # ✅ Add this to render new chart
+                    st.session_state.pop("generated_chart_code", None)
 
-	                st.session_state["chart_metadata"].append({
-	                    "code": st.session_state["generated_chart_code"],
-	                    "x_cols": x_axis_cols,
-	                    "y_cols": y_axis_cols
-	                })
+                except Exception as e:
+                    st.error("❌ Chart rendering failed.")
+                    st.exception(e)
 
-	            st.session_state.pop("generated_chart_code", None)
+            if st.session_state["chart_metadata"]:
+                st.subheader("📊 Created Charts")
 
-	        except Exception as e:
-	            st.error("❌ Chart rendering failed.")
-	            st.exception(e)
+                # Column Filters
+                df = st.session_state.query_result_df
+                filter_cols = st.multiselect(
+                    "Select columns to filter", df.columns.tolist()
+                )
 
-	    if st.session_state["chart_metadata"]:
-	        st.subheader("📊 Created Charts")
+                filters = {}
+                for col in filter_cols:
+                    unique_vals = sorted(df[col].dropna().unique())
+                    selected_vals = st.multiselect(
+                        f"Filter {col}", unique_vals, default=unique_vals
+                    )
+                    filters[col] = selected_vals
 
-	    # Column Filters
-	        df = st.session_state.query_result_df
-	        filter_cols = st.multiselect(
-	            "Select columns to filter", df.columns.tolist()
-	        )
+                # Apply filters
+                filtered_df = df.copy()
+                for col, vals in filters.items():
+                    filtered_df = filtered_df[filtered_df[col].isin(vals)]
 
-	        filters = {}
-	        for col in filter_cols:
-	            unique_vals = sorted(df[col].dropna().unique())
-	            selected_vals = st.multiselect(
-	                f"Filter {col}", unique_vals, default=unique_vals
-	            )
-	            filters[col] = selected_vals
+                # Display last 6 charts using filtered_df as df
+                grid_cols = st.columns(3)
+                # Directly loop over the last 6 chart entries with their true indices
+                for display_i, chart_index in enumerate(range(max(0, len(st.session_state["chart_metadata"]) - 6), len(st.session_state["chart_metadata"]))):
+                    meta = st.session_state["chart_metadata"][chart_index]
+                    exec_globals = {"pd": pd, "df": filtered_df,
+                    "px": px, "go": go, "np": np}
+                    exec(meta["code"], exec_globals)
+                    fig = next(v for v in exec_globals.values()
+                               if isinstance(v, go.Figure))
 
-	    # Apply filters
-	        filtered_df = df.copy()
-	        for col, vals in filters.items():
-	            filtered_df = filtered_df[filtered_df[col].isin(vals)]
+                    with grid_cols[display_i % 3]:
+                        delete_key = f"delete_chart_{chart_index}"
+                        if st.button("❌", key=delete_key):
+                            st.session_state["chart_metadata"].pop(chart_index)
+                            st.rerun()
 
-	    # Display last 6 charts using filtered_df as df
-	        grid_cols = st.columns(3)
-	        for display_i, chart_index in enumerate(
-	            range(max(0, len(st.session_state["chart_metadata"]) - 6), len(st.session_state["chart_metadata"]))
-	        ):
-	            meta = st.session_state["chart_metadata"][chart_index]
-	            exec_globals = {"pd": pd, "df": filtered_df, "px": px, "go": go, "np": np}
-	            exec(meta["code"], exec_globals)
-	            fig = next(v for v in exec_globals.values() if isinstance(v, go.Figure))
-
-	            with grid_cols[display_i % 3]:
-	                delete_key = f"delete_chart_{chart_index}"
-	                if st.button("❌", key=delete_key):
-	                    st.session_state["chart_metadata"].pop(chart_index)
-	                    st.rerun()
-
-	                st.plotly_chart(fig, use_container_width=True, key=f"chart_{display_i}")
+                        st.plotly_chart(fig, use_container_width=True,
+                                        key=f"chart_{display_i}")
             else:
                 st.info(
                     "No chart generated yet. Use the controls above to create one.")
 
         else:
             st.info("Please request data to generate chart!!")
-
 
 def sanitize_gemini_response(text):
     text = re.sub(r'</?div[^>]*>', '', text)
