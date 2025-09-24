@@ -37,8 +37,19 @@ conn = pyodbc.connect(
 #    'PWD=Genie@1234;'
 #)
 
+def is_port_open(port):
+    """Check if a port is already in use."""
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        s.connect(("localhost", port))
+        s.close()
+        return True
+    except:
+        return False
+        
 cursor = conn.cursor()
 print("cursror connected")
+
 def get_user_credentials():
 
     cursor.execute("SELECT username, password FROM dbo.login_credentials")
@@ -103,9 +114,6 @@ def login():
         with open("session_token.json", "w") as f:
             json.dump(session_data, f)
             print(f'Session token saved for {username}')
-
-        subprocess.Popen(['streamlit', 'run', 'rakshita.py',"--server.port","8501","--server.address","0.0.0.0",
-                            "--server.headless", "true"])
 
         return redirect(f"http://{public_ip}:8501")
     else:
