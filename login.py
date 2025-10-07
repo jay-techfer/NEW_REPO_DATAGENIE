@@ -27,7 +27,7 @@ conn = pyodbc.connect(
     'SERVER=localhost,1433;'
     'DATABASE=query_genie;'
     'UID=SA;'
-    'PWD=Admin@1234;'
+    'PWD=abcd@123456;'
     )
 #conn = pyodbc.connect(
 #    'DRIVER={ODBC Driver 17 for SQL Server};'
@@ -114,6 +114,9 @@ def login():
         with open("session_token.json", "w") as f:
             json.dump(session_data, f)
             print(f'Session token saved for {username}')
+
+        subprocess.Popen(['streamlit', 'run', 'Back_test.py',"--server.port","8501","--server.address","0.0.0.0",
+                            "--server.headless", "true"])
 
         return redirect(f"http://{public_ip}:8501")
     else:

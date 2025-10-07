@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import urllib
-import pyodbc
+#import pyodbc
 import re
 from sqlalchemy import create_engine
 import google.generativeai as genai
@@ -9,16 +9,16 @@ import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
 import socket
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 # from streamlit_plotly_events import plotly_events
-from PIL import Image
-from io import BytesIO
-import plotly.io as pio
-from fpdf import FPDF
-import io
-from PIL import Image
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
+#from PIL import Image
+#from io import BytesIO
+#import plotly.io as pio
+#from fpdf import FPDF
+#import io
+#from PIL import Image
+#from reportlab.pdfgen import canvas
+#from reportlab.lib.pagesizes import A4
 from cryptography.fernet import Fernet
 import os
 import time
@@ -56,7 +56,7 @@ except Exception as e:
     st.stop()
 # 🔹 Configure Gemini
 genai.configure(api_key="AIzaSyC0T1vRMxg8r2Ma75sit71SWFHGyKpwRso")
-model = genai.GenerativeModel("gemini-1.5-pro")
+model = genai.GenerativeModel("gemini-2.5-flash")
 
 # 🔹 Streamlit config
 st.set_page_config("DataGenie", layout="wide",
@@ -67,7 +67,7 @@ st.markdown("""
     <style>
     [data-testid="stSidebar"] {
         max-width: 1000px;
-        min-width: 600px;
+        min-width: 500px;
         overflow-x: auto;
     }
 
@@ -107,7 +107,7 @@ ssms_servers = [
         "name": "EC2_SQLSERVER",   # or just "SQLEXPRESS"
         "server": "localhost,1433",       # dynamically set IP
         "username": "SA",
-        "password": "Admin@1234"
+        "password": "abcd@123456"
     }
 ]
 
@@ -119,17 +119,17 @@ def fetch_ssms_schema():
     data = []
     for s in ssms_servers:
         try:
-            base_conn = f"Driver={{ODBC Driver 17 for SQL Server}};Server={
+            base_conn = f"""Driver={{ODBC Driver 17 for SQL Server}};Server={
                 s['server']};UID={
                 s['username']};PWD={
-                s['password']};Encrypt=no;"
+                s['password']};Encrypt=no;"""
             dbs = ["AdventureWorks2022"]  # ✅ Only fetch AdventureWorks
 
             for db in dbs:
-                db_conn = f"Driver={{ODBC Driver 17 for SQL Server}};Server={
+                db_conn = f"""Driver={{ODBC Driver 17 for SQL Server}};Server={
                     s['server']};Database={db};UID={
                     s['username']};PWD={
-                    s['password']};Encrypt=no;"
+                    s['password']};Encrypt=no;"""
                 engine = create_engine(
                     f"mssql+pyodbc:///?odbc_connect={urllib.parse.quote_plus(db_conn)}")
                 df = pd.read_sql(
@@ -251,12 +251,6 @@ with st.sidebar:
                 new_df1.columns.tolist(),
                 default=st.session_state.get("y_axis_cols", [])
             )
-            adv_widgets = st.multiselect(
-                "⚙️ Add advanced Plotly widgets",
-                ["Range Slider", "Range Selector", "Animation",
-                 "Dropdown Menu", "Hover Compare", "Crossfilter"],
-                default=st.session_state.get("adv_widgets", [])
-            )
             chart_prompt = st.text_area(
                 "📝 Describe the chart you want to generate",
                 value=st.session_state.get("chart_prompt", "")
@@ -271,13 +265,11 @@ with st.sidebar:
                 else:
                     st.session_state["x_axis_cols"] = x_axis_cols
                     st.session_state["y_axis_cols"] = y_axis_cols
-                    st.session_state["adv_widgets"] = adv_widgets
+                    #st.session_state["adv_widgets"] = adv_widgets
                     st.session_state["chart_prompt"] = chart_prompt
 
                     x_list = ", ".join(x_axis_cols)
                     y_list = ", ".join(y_axis_cols)
-                    widget_list = ", ".join(
-                        adv_widgets) if adv_widgets else "None"
 
                     chart_gen_prompt = f"""
                         You are a Python data visualization assistant.
@@ -287,8 +279,6 @@ with st.sidebar:
                         Selected columns from the DataFrame named `df`:
                         - X-axis: {x_list}
                         - Y-axis: {y_list}
-
-                        Advanced Plotly widgets requested: {widget_list}
 
                         Instructions:
                         - Use the existing DataFrame `df` as-is. Do not create or redefine `df` or generate any mock/sample data.
