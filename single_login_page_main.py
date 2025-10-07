@@ -29,7 +29,7 @@ st.set_page_config("DataGenie", layout="wide",
 # ssms_servers = [
 #     {
 #         "name": "COSMOS\\SQLEXPRESS01",
-#         "server": "COSMOS\\SQLEXPRESS01,53112",       # dynamically set IP
+#         "server": "COSMOS\\SQLEXPRESS01,53112",  # dynamically set IP
 #         "username": "sa",
 #         "password": "abcd123456"
 #     }
@@ -37,50 +37,43 @@ st.set_page_config("DataGenie", layout="wide",
 
 # server_cfg = ssms_servers[0]
 
-# # SQL Server connection via pyodbc (used for login verification)
-# conn = pyodbc.connect(
-#     'DRIVER={ODBC Driver 17 for SQL Server};'
-#     'SERVER=COSMOS\\SQLEXPRESS01,53112;'
-#     'DATABASE=query_genie;'
-#     'UID=sa;'
-#     'PWD=abcd123456;'
+# # Build connection string safely
+# params = urllib.parse.quote_plus(
+#     f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+#     f"SERVER={server_cfg['server']};"
+#     f"DATABASE=query_genie;"
+#     f"UID={server_cfg['username']};"
+#     f"PWD={server_cfg['password']};"
 # )
-# cursor = conn.cursor()
 
-# # SQLAlchemy engine (used for inserts/updates, like logout)
-# conn_str = (
-#     "mssql+pyodbc://sa:abcd123456@COSMOS\\SQLEXPRESS01,53112/query_genie"
-#     "?driver=ODBC+Driver+17+for+SQL+Server"
-# )
-# engine = create_engine(conn_str, fast_executemany=True)
+# # SQLAlchemy engine (single connection for everything)
+# engine = create_engine(
+#     f"mssql+pyodbc:///?odbc_connect={params}", fast_executemany=True)
 
 ssms_servers = [
     {
         "name": "EC2_SQLSERVER",
         "server": "localhost,1433",       # dynamically set IP
         "username": "SA",
-        "password": "Admin@1234"
+        "password": "abcd@123456"
     }
 ]
 
 server_cfg = ssms_servers[0]
 
-# SQL Server connection via pyodbc (used for login verification)
-conn = pyodbc.connect(
-    'DRIVER={ODBC Driver 17 for SQL Server};'
-    'SERVER=localhost,1433;'
-    'DATABASE=query_genie;'
-    'UID=SA;'
-    'PWD=Admin@1234;'
+# Build connection string safely
+params = urllib.parse.quote_plus(
+    f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+    f"SERVER={server_cfg['server']};"
+    f"DATABASE=query_genie;"
+    f"UID={server_cfg['username']};"
+    f"PWD={server_cfg['password']};"
 )
-cursor = conn.cursor()
 
-# SQLAlchemy engine (used for inserts/updates, like logout)
-conn_str = (
-    "mssql+pyodbc://SA:Admin@1234@localhost,1433/query_genie"
-    "?driver=ODBC+Driver+17+for+SQL+Server"
-)
-engine = create_engine(conn_str, fast_executemany=True)
+# SQLAlchemy engine (single connection for everything)
+engine = create_engine(
+    f"mssql+pyodbc:///?odbc_connect={params}", fast_executemany=True)
+
 
 # ----------------- Encryption Key -----------------
 fernet_key = b'Sv_cBtT5H5i_fv3sPvRrAe_2z6WRnqbmq-rmfxUyiGQ='
@@ -90,10 +83,11 @@ RECAPTCHA_SITE_KEY = "6LfkXZQrAAAAANLCHFVeHYym1YO0F_6aa9mcbziC"
 
 
 def get_user_credentials():
-    global cursor  # ✅ ensures it uses the existing global connection
-    cursor.execute("SELECT username, password FROM dbo.login_credentials")
-    result = cursor.fetchall()
-    return {row[0]: row[1] for row in result}
+    with engine.begin() as conn:
+        result = conn.execute(
+            text("SELECT username, password FROM dbo.login_credentials"))
+        rows = result.fetchall()
+        return {row[0]: row[1] for row in rows}
 
 
 def verify_recaptcha(token):
@@ -782,4 +776,5 @@ elif st.session_state["page"] == "landing":
         st.rerun()
     else:
         landing_page()  # ✅ call landing page here
+
 
