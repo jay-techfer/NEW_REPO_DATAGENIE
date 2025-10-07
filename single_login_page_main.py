@@ -207,8 +207,8 @@ def landing_page():
     st.session_state["last_activity"] = time.time()
 
     conn_str = (
-        f"mssql+pyodbc://{server_cfg['username']}:{server_cfg['password']}"
-        f"@{server_cfg['server']}/query_genie?driver=ODBC+Driver+17+for+SQL+Server"
+        f"""mssql+pyodbc://{server_cfg['username']}:{server_cfg['password']}"""
+        f"""@{server_cfg['server']}/query_genie?driver=ODBC+Driver+17+for+SQL+Server"""
     )
     engine = create_engine(conn_str, fast_executemany=True)
 
@@ -283,12 +283,12 @@ def landing_page():
                 dbs = ["AdventureWorks2022"]  # ✅ Only fetch AdventureWorks
 
                 for db in dbs:
-                    db_conn = f"Driver={{ODBC Driver 17 for SQL Server}};Server={
+                    db_conn = f"""Driver={{ODBC Driver 17 for SQL Server}};Server={
                         s['server']};Database={db};UID={
                         s['username']};PWD={
-                        s['password']};Encrypt=no;"
+                        s['password']};Encrypt=no;"""
                     engine = create_engine(
-                        f"mssql+pyodbc:///?odbc_connect={urllib.parse.quote_plus(db_conn)}")
+                        f"""mssql+pyodbc:///?odbc_connect={urllib.parse.quote_plus(db_conn)}""")
                     df = pd.read_sql(
                         "SELECT TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS",
                         engine
@@ -685,15 +685,15 @@ def landing_page():
 
                 server_cfg = ssms_servers[0]
                 conn_str = (
-                    f"Driver={{ODBC Driver 17 for SQL Server}};"
-                    f"Server={server_cfg['server']};"
-                    f"UID={server_cfg['username']};"
-                    f"PWD={server_cfg['password']};"
-                    f"Encrypt=no;TrustServerCertificate=yes;"
+                    f"""Driver={{ODBC Driver 17 for SQL Server}};"""
+                    f"""Server={server_cfg['server']};"""
+                    f"""UID={server_cfg['username']};"""
+                    f"""PWD={server_cfg['password']};"""
+                    f"""Encrypt=no;TrustServerCertificate=yes;"""
                 )
                 quoted_conn = urllib.parse.quote_plus(conn_str)
                 engine = create_engine(
-                    f"mssql+pyodbc:///?odbc_connect={quoted_conn}")
+                    f"""mssql+pyodbc:///?odbc_connect={quoted_conn}""")
                 df = pd.read_sql(query, engine)
                 st.session_state.query_result_df = df
                 # Save query to JSON history
@@ -782,3 +782,4 @@ elif st.session_state["page"] == "landing":
         st.rerun()
     else:
         landing_page()  # ✅ call landing page here
+
