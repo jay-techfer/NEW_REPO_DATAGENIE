@@ -74,6 +74,22 @@ params = urllib.parse.quote_plus(
 engine = create_engine(
     f"mssql+pyodbc:///?odbc_connect={params}", fast_executemany=True)
 
+# SQL Server connection via pyodbc (used for login verification)
+conn = pyodbc.connect(
+    'DRIVER={ODBC Driver 17 for SQL Server};'
+    'SERVER=localhost,1433;'
+    'DATABASE=query_genie;'
+    'UID=SA;'
+    'PWD=abcd@123456;'
+)
+cursor = conn.cursor()
+print("curser establish")
+# SQLAlchemy engine (used for inserts/updates, like logout)
+conn_str = (
+    "mssql+pyodbc://SA:abcd@123456@localhost,1433/query_genie"
+    "?driver=ODBC+Driver+17+for+SQL+Server"
+)
+engine = create_engine(conn_str, fast_executemany=True)
 
 # ----------------- Encryption Key -----------------
 fernet_key = b'Sv_cBtT5H5i_fv3sPvRrAe_2z6WRnqbmq-rmfxUyiGQ='
@@ -134,13 +150,14 @@ def login_page():
 
                 # Record login
                 with engine.begin() as conn:
+                    print("Engine Begin")
                     conn.execute(
                         text(
                             "INSERT INTO dbo.login_tracker (username, loginTime) VALUES (:username, GETDATE())"
                         ),
                         {"username": username}
                     )
-
+                    print("complete")
                 token = secrets.token_hex(16)
                 data = json.dumps(
                     {"username": username, "token": token}).encode()
@@ -201,9 +218,15 @@ def landing_page():
     st.session_state["last_activity"] = time.time()
 
     conn_str = (
+<<<<<<< Updated upstream
         f"""mssql+pyodbc://{server_cfg['username']}:{server_cfg['password']}"""
         f"""@{server_cfg['server']}/query_genie?driver=ODBC+Driver+17+for+SQL+Server"""
     )
+=======
+        f"""mssql+pyodbc://{server_cfg['username']}:{server_cfg['password']}"""  
+        f"""@{server_cfg['server']}/query_genie?driver=ODBC+Driver+17+for+SQL+Server"
+   """ )
+>>>>>>> Stashed changes
     engine = create_engine(conn_str, fast_executemany=True)
 
     # Optional: wider sidebar
