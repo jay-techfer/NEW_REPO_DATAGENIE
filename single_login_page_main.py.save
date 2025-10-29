@@ -17,7 +17,6 @@ from cryptography.fernet import Fernet
 import secrets
 import streamlit.components.v1 as components
 import requests
-from datetime import datetime
 
 
 genai.configure(api_key="AIzaSyC0T1vRMxg8r2Ma75sit71SWFHGyKpwRso")
@@ -73,12 +72,9 @@ params = urllib.parse.quote_plus(
 
 # SQLAlchemy engine (single connection for everything)
 engine = create_engine(
-    f"mssql+pyodbc:///?odbc_connect={params}",
-    fast_executemany=True,
-    pool_pre_ping=True,      # 🩵 auto check connection health
-    pool_recycle=1800,       # 🔁 refresh every 30 mins
-    pool_timeout=30          # ⏱️ don’t hang forever
-)
+    f"mssql+pyodbc:///?odbc_connect={params}", fast_executemany=True)
+
+
 # ----------------- Encryption Key -----------------
 fernet_key = b'Sv_cBtT5H5i_fv3sPvRrAe_2z6WRnqbmq-rmfxUyiGQ='
 cipher_suite = Fernet(fernet_key)
@@ -169,7 +165,7 @@ def landing_page():
     ssms_schema_df = pd.DataFrame()
     m_p = st.empty()
 
-    timeout_seconds = 1200  # 5 minutes
+    timeout_seconds = 60  # 5 minutes
 
     last_activity = st.session_state.get("last_activity", time.time())
 
@@ -196,7 +192,7 @@ def landing_page():
                     """), {"username": username_for_db})
             except Exception as e:
                 st.warning(f"⚠️ Could not update logout time: {e}")
-                print("error",e)
+
         # Clear session and redirect
         st.session_state.clear()
         st.session_state["page"] = "login"
@@ -216,7 +212,7 @@ def landing_page():
         <style>
         [data-testid="stSidebar"] {
             max-width: 1000px;
-            min-width: 600px;
+            min-width: 500px;
             overflow-x: auto;
         }
 
@@ -405,8 +401,8 @@ def landing_page():
                         """), {"username": username_for_db})
 
                 except Exception as e:
-                    #st.warning(f"⚠️ Could not update logout time: {e}")
-                    print("error: ",e)
+                    st.warning(f"⚠️ Could not update logout time: {e}")
+
                 # ✅ Clear session state completely
                 st.session_state.clear()
 
@@ -694,14 +690,7 @@ def landing_page():
                 engine = create_engine(
                     f"""mssql+pyodbc:///?odbc_connect={quoted_conn}""")
                 df = pd.read_sql(query, engine)
-                df.fillna("", inplace=True)
                 st.session_state.query_result_df = df
-                if df.empty:
-                    st.warning("Query returned no data")
-                else:
-                    st.dataframe(df)
-
-                print(df.head())
                 # Save query to JSON history
                 current_user = st.session_state.get("username", "")
                 if current_user:

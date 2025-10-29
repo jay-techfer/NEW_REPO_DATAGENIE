@@ -1,0 +1,112 @@
+{
+    "admin": [
+        {
+            "role": "user",
+            "message": "give me sales data of 2012"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[SalesOrderID],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[RevisionNumber],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[OrderDate],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[DueDate],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[ShipDate],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[Status],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[OnlineOrderFlag],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[SalesOrderNumber],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[PurchaseOrderNumber],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[AccountNumber],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[CustomerID],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[SalesPersonID],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[TerritoryID],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[BillToAddressID],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[ShipToAddressID],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[ShipMethodID],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[CreditCardID],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[CreditCardApprovalCode],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[CurrencyRateID],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[SubTotal],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[TaxAmt],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[Freight],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[TotalDue],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[Comment],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[rowguid],\n    [AdventureWorks2022].[Sales].[SalesOrderHeader].[ModifiedDate]\nFROM\n    [AdventureWorks2022].[Sales].[SalesOrderHeader]\nWHERE\n    YEAR([AdventureWorks2022].[Sales].[SalesOrderHeader].[OrderDate]) = 2012"
+        },
+        {
+            "role": "user",
+            "message": "give me product name and its total sales"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n  AdventureWorks2022.Production.Product.Name,\n  SUM(AdventureWorks2022.Sales.SalesOrderDetail.LineTotal) AS TotalSales\nFROM AdventureWorks2022.Production.Product\nINNER JOIN AdventureWorks2022.Sales.SalesOrderDetail\n  ON AdventureWorks2022.Production.Product.ProductID = AdventureWorks2022.Sales.SalesOrderDetail.ProductID\nGROUP BY\n  AdventureWorks2022.Production.Product.Name;"
+        },
+        {
+            "role": "user",
+            "message": "can you add product category name in the above table"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n  AdventureWorks2022.Production.ProductCategory.Name AS ProductCategoryName,\n  AdventureWorks2022.Production.Product.Name,\n  SUM(AdventureWorks2022.Sales.SalesOrderDetail.LineTotal) AS TotalSales\nFROM AdventureWorks2022.Production.Product\nINNER JOIN AdventureWorks2022.Sales.SalesOrderDetail\n  ON AdventureWorks2022.Production.Product.ProductID = AdventureWorks2022.Sales.SalesOrderDetail.ProductID\nINNER JOIN AdventureWorks2022.Production.ProductSubcategory\n  ON AdventureWorks2022.Production.Product.ProductSubcategoryID = AdventureWorks2022.Production.ProductSubcategory.ProductSubcategoryID\nINNER JOIN AdventureWorks2022.Production.ProductCategory\n  ON AdventureWorks2022.Production.ProductSubcategory.ProductCategoryID = AdventureWorks2022.Production.ProductCategory.ProductCategoryID\nGROUP BY\n  AdventureWorks2022.Production.ProductCategory.Name,\n  AdventureWorks2022.Production.Product.Name"
+        },
+        {
+            "role": "user",
+            "message": "also add subcategory name in the above table."
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n  AdventureWorks2022.Production.ProductCategory.Name AS ProductCategoryName,\n  AdventureWorks2022.Production.ProductSubcategory.Name AS ProductSubcategoryName,\n  AdventureWorks2022.Production.Product.Name,\n  SUM(AdventureWorks2022.Sales.SalesOrderDetail.LineTotal) AS TotalSales\nFROM AdventureWorks2022.Production.Product\nINNER JOIN AdventureWorks2022.Sales.SalesOrderDetail\n  ON AdventureWorks2022.Production.Product.ProductID = AdventureWorks2022.Sales.SalesOrderDetail.ProductID\nINNER JOIN AdventureWorks2022.Production.ProductSubcategory\n  ON AdventureWorks2022.Production.Product.ProductSubcategoryID = AdventureWorks2022.Production.ProductSubcategory.ProductSubcategoryID\nINNER JOIN AdventureWorks2022.Production.ProductCategory\n  ON AdventureWorks2022.Production.ProductSubcategory.ProductCategoryID = AdventureWorks2022.Production.ProductCategory.ProductCategoryID\nGROUP BY\n  AdventureWorks2022.Production.ProductCategory.Name,\n  AdventureWorks2022.Production.ProductSubcategory.Name,\n  AdventureWorks2022.Production.Product.Name"
+        },
+        {
+            "role": "user",
+            "message": "now can you remove colunm category name from the above table"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n  AdventureWorks2022.Production.ProductSubcategory.Name AS ProductSubcategoryName,\n  AdventureWorks2022.Production.Product.Name,\n  SUM(AdventureWorks2022.Sales.SalesOrderDetail.LineTotal) AS TotalSales\nFROM AdventureWorks2022.Production.Product\nINNER JOIN AdventureWorks2022.Sales.SalesOrderDetail\n  ON AdventureWorks2022.Production.Product.ProductID = AdventureWorks2022.Sales.SalesOrderDetail.ProductID\nINNER JOIN AdventureWorks2022.Production.ProductSubcategory\n  ON AdventureWorks2022.Production.Product.ProductSubcategoryID = AdventureWorks2022.Production.ProductSubcategory.ProductSubcategoryID\nGROUP BY\n  AdventureWorks2022.Production.ProductSubcategory.Name,\n  AdventureWorks2022.Production.Product.Name"
+        },
+        {
+            "role": "user",
+            "message": "Give me the sales data for the year for 2011"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    SUM(AdventureWorks2022.Sales.SalesOrderHeader.TotalDue) AS TotalSalesFor2011\nFROM\n    AdventureWorks2022.Sales.SalesOrderHeader\nWHERE\n    YEAR(AdventureWorks2022.Sales.SalesOrderHeader.OrderDate) = 2011"
+        },
+        {
+            "role": "user",
+            "message": "Show me the highest sold products in year 2011 in a bar chart"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    AdventureWorks2022.Production.Product.Name AS ProductName,\n    SUM(AdventureWorks2022.Sales.SalesOrderDetail.LineTotal) AS TotalRevenue\nFROM\n    AdventureWorks2022.Sales.SalesOrderHeader\nJOIN\n    AdventureWorks2022.Sales.SalesOrderDetail\n    ON AdventureWorks2022.Sales.SalesOrderHeader.SalesOrderID = AdventureWorks2022.Sales.SalesOrderDetail.SalesOrderID\nJOIN\n    AdventureWorks2022.Production.Product\n    ON AdventureWorks2022.Sales.SalesOrderDetail.ProductID = AdventureWorks2022.Production.Product.ProductID\nWHERE\n    YEAR(AdventureWorks2022.Sales.SalesOrderHeader.OrderDate) = 2011\nGROUP BY\n    AdventureWorks2022.Production.Product.Name\nORDER BY\n    TotalRevenue DESC"
+        },
+        {
+            "role": "user",
+            "message": "Now can you give me territory wise sales amount "
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n  AdventureWorks2022.Sales.SalesTerritory.Name,\n  SUM(AdventureWorks2022.Sales.SalesOrderHeader.TotalDue) AS TotalSalesAmount\nFROM AdventureWorks2022.Sales.SalesOrderHeader\nINNER JOIN AdventureWorks2022.Sales.SalesTerritory\n  ON AdventureWorks2022.Sales.SalesOrderHeader.TerritoryID = AdventureWorks2022.Sales.SalesTerritory.TerritoryID\nGROUP BY\n  AdventureWorks2022.Sales.SalesTerritory.Name\nORDER BY\n  AdventureWorks2022.Sales.SalesTerritory.Name"
+        },
+        {
+            "role": "user",
+            "message": "can you provide me all product details?"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n  AdventureWorks2022.Production.Product.ProductID,\n  AdventureWorks2022.Production.Product.Name AS ProductName,\n  AdventureWorks2022.Production.Product.ProductNumber,\n  AdventureWorks2022.Production.Product.MakeFlag,\n  AdventureWorks2022.Production.Product.FinishedGoodsFlag,\n  AdventureWorks2022.Production.Product.Color,\n  AdventureWorks2022.Production.Product.SafetyStockLevel,\n  AdventureWorks2022.Production.Product.ReorderPoint,\n  AdventureWorks2022.Production.Product.StandardCost,\n  AdventureWorks2022.Production.Product.ListPrice,\n  AdventureWorks2022.Production.Product.Size,\n  AdventureWorks2022.Production.Product.SizeUnitMeasureCode,\n  AdventureWorks2022.Production.Product.WeightUnitMeasureCode,\n  AdventureWorks2022.Production.Product.Weight,\n  AdventureWorks2022.Production.Product.DaysToManufacture,\n  AdventureWorks2022.Production.Product.ProductLine,\n  AdventureWorks2022.Production.Product.Class,\n  AdventureWorks2022.Production.Product.Style,\n  AdventureWorks2022.Production.ProductCategory.Name AS ProductCategoryName,\n  AdventureWorks2022.Production.ProductSubcategory.Name AS ProductSubcategoryName,\n  AdventureWorks2022.Production.ProductModel.Name AS ProductModelName,\n  AdventureWorks2022.Production.Product.SellStartDate,\n  AdventureWorks2022.Production.Product.SellEndDate,\n  AdventureWorks2022.Production.Product.DiscontinuedDate,\n  AdventureWorks2022.Production.Product.rowguid,\n  AdventureWorks2022.Production.Product.ModifiedDate\nFROM AdventureWorks2022.Production.Product\nLEFT JOIN AdventureWorks2022.Production.ProductSubcategory\n  ON AdventureWorks2022.Production.Product.ProductSubcategoryID = AdventureWorks2022.Production.ProductSubcategory.ProductSubcategoryID\nLEFT JOIN AdventureWorks2022.Production.ProductCategory\n  ON AdventureWorks2022.Production.ProductSubcategory.ProductCategoryID = AdventureWorks2022.Production.ProductCategory.ProductCategoryID\nLEFT JOIN AdventureWorks2022.Production.ProductModel\n  ON AdventureWorks2022.Production.Product.ProductModelID = AdventureWorks2022.Production.ProductModel.ProductModelID"
+        },
+        {
+            "role": "user",
+            "message": "give me all sales data of 2012"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n  AdventureWorks2022.Sales.SalesOrderHeader.SalesOrderID,\n  AdventureWorks2022.Sales.SalesOrderHeader.RevisionNumber,\n  AdventureWorks2022.Sales.SalesOrderHeader.OrderDate,\n  AdventureWorks2022.Sales.SalesOrderHeader.DueDate,\n  AdventureWorks2022.Sales.SalesOrderHeader.ShipDate,\n  AdventureWorks2022.Sales.SalesOrderHeader.Status,\n  AdventureWorks2022.Sales.SalesOrderHeader.OnlineOrderFlag,\n  AdventureWorks2022.Sales.SalesOrderHeader.SalesOrderNumber,\n  AdventureWorks2022.Sales.SalesOrderHeader.PurchaseOrderNumber,\n  AdventureWorks2022.Sales.SalesOrderHeader.AccountNumber,\n  AdventureWorks2022.Sales.SalesOrderHeader.CustomerID,\n  AdventureWorks2022.Sales.SalesOrderHeader.SalesPersonID,\n  AdventureWorks2022.Sales.SalesOrderHeader.TerritoryID,\n  AdventureWorks2022.Sales.SalesOrderHeader.BillToAddressID,\n  AdventureWorks2022.Sales.SalesOrderHeader.ShipToAddressID,\n  AdventureWorks2022.Sales.SalesOrderHeader.ShipMethodID,\n  AdventureWorks2022.Sales.SalesOrderHeader.CreditCardID,\n  AdventureWorks2022.Sales.SalesOrderHeader.CreditCardApprovalCode,\n  AdventureWorks2022.Sales.SalesOrderHeader.CurrencyRateID,\n  AdventureWorks2022.Sales.SalesOrderHeader.SubTotal,\n  AdventureWorks2022.Sales.SalesOrderHeader.TaxAmt,\n  AdventureWorks2022.Sales.SalesOrderHeader.Freight,\n  AdventureWorks2022.Sales.SalesOrderHeader.TotalDue,\n  AdventureWorks2022.Sales.SalesOrderHeader.Comment,\n  AdventureWorks2022.Sales.SalesOrderHeader.rowguid,\n  AdventureWorks2022.Sales.SalesOrderHeader.ModifiedDate\nFROM AdventureWorks2022.Sales.SalesOrderHeader\nWHERE\n  YEAR(AdventureWorks2022.Sales.SalesOrderHeader.OrderDate) = 2012"
+        },
+        {
+            "role": "user",
+            "message": "Give me top 10 products in year 2011"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT TOP 10\n    AdventureWorks2022.Production.Product.Name AS ProductName,\n    SUM(AdventureWorks2022.Sales.SalesOrderDetail.LineTotal) AS TotalRevenue\nFROM\n    AdventureWorks2022.Sales.SalesOrderHeader\nINNER JOIN\n    AdventureWorks2022.Sales.SalesOrderDetail\n    ON AdventureWorks2022.Sales.SalesOrderHeader.SalesOrderID = AdventureWorks2022.Sales.SalesOrderDetail.SalesOrderID\nINNER JOIN\n    AdventureWorks2022.Production.Product\n    ON AdventureWorks2022.Sales.SalesOrderDetail.ProductID = AdventureWorks2022.Production.Product.ProductID\nWHERE\n    YEAR(AdventureWorks2022.Sales.SalesOrderHeader.OrderDate) = 2011\nGROUP BY\n    AdventureWorks2022.Production.Product.Name\nORDER BY\n    TotalRevenue DESC"
+        },
+        {
+            "role": "assistant",
+            "message": "\u26a0\ufe0f Token limit exceeded \u2014 please aggregate or shorten your data before retrying."
+        },
+        {
+            "role": "user",
+            "message": "Pie chart for sales data year over year"
+        },
+        {
+            "role": "assistant",
+            "message": "I cannot generate a pie chart for \"sales data year over year\" with the provided data.\n\n*   The current data set only contains information about the top 10 products and their total revenue for the year 2011.\n*   To create a \"year over year\" sales pie chart, I would need sales data broken down by each year to show the proportion of total sales contributed by each year.\n\nIf you would like a pie chart representing the distribution of revenue among the top 10 products in 2011, please let me know."
+        },
+        {
+            "role": "user",
+            "message": "sales data year over year"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    YEAR(AdventureWorks2022.Sales.SalesOrderHeader.OrderDate) AS SalesYear,\n    SUM(AdventureWorks2022.Sales.SalesOrderHeader.TotalDue) AS TotalSales\nFROM\n    AdventureWorks2022.Sales.SalesOrderHeader\nGROUP BY\n    YEAR(AdventureWorks2022.Sales.SalesOrderHeader.OrderDate)\nORDER BY\n    SalesYear\n-- SSMS Query End"
+        }
+    ]
+}

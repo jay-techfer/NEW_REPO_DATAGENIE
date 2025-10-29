@@ -1,0 +1,148 @@
+{
+    "admin": [
+        {
+            "role": "user",
+            "message": "give me product data"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n  AdventureWorks2022.Production.vProductAndDescription.ProductID,\n  AdventureWorks2022.Production.vProductAndDescription.Name,\n  AdventureWorks2022.Production.vProductAndDescription.ProductModel,\n  AdventureWorks2022.Production.vProductAndDescription.CultureID,\n  AdventureWorks2022.Production.vProductAndDescription.Description\nFROM AdventureWorks2022.Production.vProductAndDescription"
+        },
+        {
+            "role": "user",
+            "message": "Give me prodduct data "
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    AdventureWorks2022.Production.vProductAndDescription.ProductID,\n    AdventureWorks2022.Production.vProductAndDescription.Name,\n    AdventureWorks2022.Production.vProductAndDescription.ProductModel,\n    AdventureWorks2022.Production.vProductAndDescription.CultureID,\n    AdventureWorks2022.Production.vProductAndDescription.Description\nFROM\n    AdventureWorks2022.Production.vProductAndDescription"
+        },
+        {
+            "role": "user",
+            "message": "ok give me only top 50 as per the price"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT TOP 50\n    AdventureWorks2022.Production.Product.Name,\n    AdventureWorks2022.Production.Product.ListPrice\nFROM\n    AdventureWorks2022.Production.Product\nORDER BY\n    AdventureWorks2022.Production.Product.ListPrice DESC"
+        },
+        {
+            "role": "user",
+            "message": "ok give me only top 50 as per the price"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT TOP 50\n    AdventureWorks2022.Production.Product.Name,\n    AdventureWorks2022.Production.Product.ListPrice\nFROM\n    AdventureWorks2022.Production.Product\nORDER BY\n    AdventureWorks2022.Production.Product.ListPrice DESC"
+        },
+        {
+            "role": "user",
+            "message": "i only want top 10 data as per the highest price"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT TOP 10\n    AdventureWorks2022.Production.Product.ProductID,\n    AdventureWorks2022.Production.Product.Name,\n    AdventureWorks2022.Production.Product.ProductNumber,\n    AdventureWorks2022.Production.Product.MakeFlag,\n    AdventureWorks2022.Production.Product.FinishedGoodsFlag,\n    AdventureWorks2022.Production.Product.Color,\n    AdventureWorks2022.Production.Product.SafetyStockLevel,\n    AdventureWorks2022.Production.Product.ReorderPoint,\n    AdventureWorks2022.Production.Product.StandardCost,\n    AdventureWorks2022.Production.Product.ListPrice,\n    AdventureWorks2022.Production.Product.Size,\n    AdventureWorks2022.Production.Product.SizeUnitMeasureCode,\n    AdventureWorks2022.Production.Product.WeightUnitMeasureCode,\n    AdventureWorks2022.Production.Product.Weight,\n    AdventureWorks2022.Production.Product.DaysToManufacture,\n    AdventureWorks2022.Production.Product.ProductLine,\n    AdventureWorks2022.Production.Product.Class,\n    AdventureWorks2022.Production.Product.Style,\n    AdventureWorks2022.Production.Product.ProductSubcategoryID,\n    AdventureWorks2022.Production.Product.ProductModelID,\n    AdventureWorks2022.Production.Product.SellStartDate,\n    AdventureWorks2022.Production.Product.SellEndDate,\n    AdventureWorks2022.Production.Product.DiscontinuedDate,\n    AdventureWorks2022.Production.Product.rowguid,\n    AdventureWorks2022.Production.Product.ModifiedDate\nFROM\n    AdventureWorks2022.Production.Product\nORDER BY\n    AdventureWorks2022.Production.Product.ListPrice DESC"
+        },
+        {
+            "role": "user",
+            "message": "give me product data"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    [AdventureWorks2022].[Production].[vProductAndDescription].[ProductID],\n    [AdventureWorks2022].[Production].[vProductAndDescription].[Name],\n    [AdventureWorks2022].[Production].[vProductAndDescription].[ProductModel],\n    [AdventureWorks2022].[Production].[vProductAndDescription].[CultureID],\n    [AdventureWorks2022].[Production].[vProductAndDescription].[Description]\nFROM\n    [AdventureWorks2022].[Production].[vProductAndDescription]"
+        },
+        {
+            "role": "user",
+            "message": "ok now give me only top 50 as per the price"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT TOP 50\n    AdventureWorks2022.Production.Product.Name,\n    AdventureWorks2022.Production.Product.ListPrice\nFROM\n    AdventureWorks2022.Production.Product\nORDER BY\n    AdventureWorks2022.Production.Product.ListPrice DESC"
+        },
+        {
+            "role": "user",
+            "message": "now only give me top 20"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT TOP 20\n    AdventureWorks2022.Production.Product.ProductID,\n    AdventureWorks2022.Production.Product.Name,\n    AdventureWorks2022.Production.Product.ProductNumber,\n    AdventureWorks2022.Production.Product.MakeFlag,\n    AdventureWorks2022.Production.Product.FinishedGoodsFlag,\n    AdventureWorks2022.Production.Product.Color,\n    AdventureWorks2022.Production.Product.SafetyStockLevel,\n    AdventureWorks2022.Production.Product.ReorderPoint,\n    AdventureWorks2022.Production.Product.StandardCost,\n    AdventureWorks2022.Production.Product.ListPrice,\n    AdventureWorks2022.Production.Product.Size,\n    AdventureWorks2022.Production.Product.SizeUnitMeasureCode,\n    AdventureWorks2022.Production.Product.WeightUnitMeasureCode,\n    AdventureWorks2022.Production.Product.Weight,\n    AdventureWorks2022.Production.Product.DaysToManufacture,\n    AdventureWorks2022.Production.Product.ProductLine,\n    AdventureWorks2022.Production.Product.Class,\n    AdventureWorks2022.Production.Product.Style,\n    AdventureWorks2022.Production.Product.ProductSubcategoryID,\n    AdventureWorks2022.Production.Product.ProductModelID,\n    AdventureWorks2022.Production.Product.SellStartDate,\n    AdventureWorks2022.Production.Product.SellEndDate,\n    AdventureWorks2022.Production.Product.DiscontinuedDate,\n    AdventureWorks2022.Production.Product.rowguid,\n    AdventureWorks2022.Production.Product.ModifiedDate\nFROM\n    AdventureWorks2022.Production.Product\nORDER BY\n    AdventureWorks2022.Production.Product.ListPrice DESC"
+        },
+        {
+            "role": "user",
+            "message": "now just give me top 33 as per colour"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT TOP 33\n    AdventureWorks2022.Production.Product.ProductID,\n    AdventureWorks2022.Production.Product.Name,\n    AdventureWorks2022.Production.Product.ProductNumber,\n    AdventureWorks2022.Production.Product.MakeFlag,\n    AdventureWorks2022.Production.Product.FinishedGoodsFlag,\n    AdventureWorks2022.Production.Product.Color,\n    AdventureWorks2022.Production.Product.SafetyStockLevel,\n    AdventureWorks2022.Production.Product.ReorderPoint,\n    AdventureWorks2022.Production.Product.StandardCost,\n    AdventureWorks2022.Production.Product.ListPrice,\n    AdventureWorks2022.Production.Product.Size,\n    AdventureWorks2022.Production.Product.SizeUnitMeasureCode,\n    AdventureWorks2022.Production.Product.WeightUnitMeasureCode,\n    AdventureWorks2022.Production.Product.Weight,\n    AdventureWorks2022.Production.Product.DaysToManufacture,\n    AdventureWorks2022.Production.Product.ProductLine,\n    AdventureWorks2022.Production.Product.Class,\n    AdventureWorks2022.Production.Product.Style,\n    AdventureWorks2022.Production.Product.ProductSubcategoryID,\n    AdventureWorks2022.Production.Product.ProductModelID,\n    AdventureWorks2022.Production.Product.SellStartDate,\n    AdventureWorks2022.Production.Product.SellEndDate,\n    AdventureWorks2022.Production.Product.DiscontinuedDate,\n    AdventureWorks2022.Production.Product.rowguid,\n    AdventureWorks2022.Production.Product.ModifiedDate\nFROM\n    AdventureWorks2022.Production.Product\nORDER BY\n    AdventureWorks2022.Production.Product.Color"
+        },
+        {
+            "role": "user",
+            "message": "give me product data "
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    AdventureWorks2022.Production.Product.ProductID,\n    AdventureWorks2022.Production.Product.Name AS ProductName,\n    AdventureWorks2022.Production.Product.ProductNumber,\n    AdventureWorks2022.Production.Product.MakeFlag,\n    AdventureWorks2022.Production.Product.FinishedGoodsFlag,\n    AdventureWorks2022.Production.Product.Color AS ProductColor,\n    AdventureWorks2022.Production.Product.SafetyStockLevel,\n    AdventureWorks2022.Production.Product.ReorderPoint,\n    AdventureWorks2022.Production.Product.StandardCost,\n    AdventureWorks2022.Production.Product.ListPrice,\n    AdventureWorks2022.Production.Product.Size,\n    AdventureWorks2022.Production.Product.SizeUnitMeasureCode,\n    AdventureWorks2022.Production.Product.WeightUnitMeasureCode,\n    AdventureWorks2022.Production.Product.Weight,\n    AdventureWorks2022.Production.Product.DaysToManufacture,\n    AdventureWorks2022.Production.Product.ProductLine AS ProductProductLine,\n    AdventureWorks2022.Production.Product.Class,\n    AdventureWorks2022.Production.Product.Style AS ProductStyle,\n    AdventureWorks2022.Production.Product.SellStartDate,\n    AdventureWorks2022.Production.Product.SellEndDate,\n    AdventureWorks2022.Production.Product.DiscontinuedDate,\n    AdventureWorks2022.Production.ProductSubcategory.Name AS ProductSubcategoryName,\n    AdventureWorks2022.Production.ProductCategory.Name AS ProductCategoryName,\n    AdventureWorks2022.Production.ProductModel.Name AS ProductModelName,\n    AdventureWorks2022.Production.vProductAndDescription.Description AS ProductDescription,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Summary,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Manufacturer,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Copyright,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.ProductURL,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.WarrantyPeriod,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.WarrantyDescription,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.NoOfYears,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.MaintenanceDescription,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Wheel,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Saddle,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Pedal,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.BikeFrame,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Crankset,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.PictureAngle,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.PictureSize,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.ProductPhotoID,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Material,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.RiderExperience\nFROM\n    AdventureWorks2022.Production.Product\nLEFT JOIN\n    AdventureWorks2022.Production.ProductSubcategory\n    ON AdventureWorks2022.Production.Product.ProductSubcategoryID = AdventureWorks2022.Production.ProductSubcategory.ProductSubcategoryID\nLEFT JOIN\n    AdventureWorks2022.Production.ProductCategory\n    ON AdventureWorks2022.Production.ProductSubcategory.ProductCategoryID = AdventureWorks2022.Production.ProductCategory.ProductCategoryID\nLEFT JOIN\n    AdventureWorks2022.Production.ProductModel\n    ON AdventureWorks2022.Production.Product.ProductModelID = AdventureWorks2022.Production.ProductModel.ProductModelID\nLEFT JOIN\n    AdventureWorks2022.Production.vProductAndDescription\n    ON AdventureWorks2022.Production.Product.ProductID = AdventureWorks2022.Production.vProductAndDescription.ProductID\n    AND AdventureWorks2022.Production.vProductAndDescription.CultureID = 'en'\nLEFT JOIN\n    AdventureWorks2022.Production.vProductModelCatalogDescription\n    ON AdventureWorks2022.Production.Product.ProductModelID = AdventureWorks2022.Production.vProductModelCatalogDescription.ProductModelID"
+        },
+        {
+            "role": "user",
+            "message": "ok now just give me the price and colour"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    AdventureWorks2022.Production.Product.ListPrice,\n    AdventureWorks2022.Production.Product.Color\nFROM\n    AdventureWorks2022.Production.Product"
+        },
+        {
+            "role": "user",
+            "message": "give me product data"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    AdventureWorks2022.Production.Product.ProductID,\n    AdventureWorks2022.Production.Product.Name,\n    AdventureWorks2022.Production.Product.ProductNumber,\n    AdventureWorks2022.Production.Product.MakeFlag,\n    AdventureWorks2022.Production.Product.FinishedGoodsFlag,\n    AdventureWorks2022.Production.Product.Color,\n    AdventureWorks2022.Production.Product.SafetyStockLevel,\n    AdventureWorks2022.Production.Product.ReorderPoint,\n    AdventureWorks2022.Production.Product.StandardCost,\n    AdventureWorks2022.Production.Product.ListPrice,\n    AdventureWorks2022.Production.Product.Size,\n    AdventureWorks2022.Production.Product.SizeUnitMeasureCode,\n    AdventureWorks2022.Production.Product.WeightUnitMeasureCode,\n    AdventureWorks2022.Production.Product.Weight,\n    AdventureWorks2022.Production.Product.DaysToManufacture,\n    AdventureWorks2022.Production.Product.ProductLine,\n    AdventureWorks2022.Production.Product.Class,\n    AdventureWorks2022.Production.Product.Style,\n    AdventureWorks2022.Production.Product.ProductSubcategoryID,\n    AdventureWorks2022.Production.Product.ProductModelID,\n    AdventureWorks2022.Production.Product.SellStartDate,\n    AdventureWorks2022.Production.Product.SellEndDate,\n    AdventureWorks2022.Production.Product.DiscontinuedDate,\n    AdventureWorks2022.Production.Product.rowguid,\n    AdventureWorks2022.Production.Product.ModifiedDate\nFROM\n    AdventureWorks2022.Production.Product"
+        },
+        {
+            "role": "user",
+            "message": "give me only top 5 with price and color"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT TOP 5\n    AdventureWorks2022.Production.Product.Color,\n    AdventureWorks2022.Production.Product.ListPrice\nFROM\n    AdventureWorks2022.Production.Product"
+        },
+        {
+            "role": "user",
+            "message": "ok now give me also there name"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT TOP 5\n    AdventureWorks2022.Production.Product.Name,\n    AdventureWorks2022.Production.Product.ListPrice,\n    AdventureWorks2022.Production.Product.Color\nFROM\n    AdventureWorks2022.Production.Product\nORDER BY\n    AdventureWorks2022.Production.Product.ListPrice DESC"
+        },
+        {
+            "role": "user",
+            "message": "now h=give me all columns"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n  AdventureWorks2022.Production.Product.ProductID,\n  AdventureWorks2022.Production.Product.Name,\n  AdventureWorks2022.Production.Product.ProductNumber,\n  AdventureWorks2022.Production.Product.MakeFlag,\n  AdventureWorks2022.Production.Product.FinishedGoodsFlag,\n  AdventureWorks2022.Production.Product.Color,\n  AdventureWorks2022.Production.Product.SafetyStockLevel,\n  AdventureWorks2022.Production.Product.ReorderPoint,\n  AdventureWorks2022.Production.Product.StandardCost,\n  AdventureWorks2022.Production.Product.ListPrice,\n  AdventureWorks2022.Production.Product.Size,\n  AdventureWorks2022.Production.Product.SizeUnitMeasureCode,\n  AdventureWorks2022.Production.Product.WeightUnitMeasureCode,\n  AdventureWorks2022.Production.Product.Weight,\n  AdventureWorks2022.Production.Product.DaysToManufacture,\n  AdventureWorks2022.Production.Product.ProductLine,\n  AdventureWorks2022.Production.Product.Class,\n  AdventureWorks2022.Production.Product.Style,\n  AdventureWorks2022.Production.Product.ProductSubcategoryID,\n  AdventureWorks2022.Production.Product.ProductModelID,\n  AdventureWorks2022.Production.Product.SellStartDate,\n  AdventureWorks2022.Production.Product.SellEndDate,\n  AdventureWorks2022.Production.Product.DiscontinuedDate,\n  AdventureWorks2022.Production.Product.rowguid,\n  AdventureWorks2022.Production.Product.ModifiedDate\nFROM AdventureWorks2022.Production.Product"
+        },
+        {
+            "role": "user",
+            "message": "give me top 50 product data as per the highest price"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT TOP 50\n    AdventureWorks2022.Production.Product.ProductID,\n    AdventureWorks2022.Production.Product.Name,\n    AdventureWorks2022.Production.Product.ProductNumber,\n    AdventureWorks2022.Production.Product.MakeFlag,\n    AdventureWorks2022.Production.Product.FinishedGoodsFlag,\n    AdventureWorks2022.Production.Product.Color,\n    AdventureWorks2022.Production.Product.SafetyStockLevel,\n    AdventureWorks2022.Production.Product.ReorderPoint,\n    AdventureWorks2022.Production.Product.StandardCost,\n    AdventureWorks2022.Production.Product.ListPrice,\n    AdventureWorks2022.Production.Product.Size,\n    AdventureWorks2022.Production.Product.SizeUnitMeasureCode,\n    AdventureWorks2022.Production.Product.WeightUnitMeasureCode,\n    AdventureWorks2022.Production.Product.Weight,\n    AdventureWorks2022.Production.Product.DaysToManufacture,\n    AdventureWorks2022.Production.Product.ProductLine,\n    AdventureWorks2022.Production.Product.Class,\n    AdventureWorks2022.Production.Product.Style,\n    AdventureWorks2022.Production.Product.ProductSubcategoryID,\n    AdventureWorks2022.Production.Product.ProductModelID,\n    AdventureWorks2022.Production.Product.SellStartDate,\n    AdventureWorks2022.Production.Product.SellEndDate,\n    AdventureWorks2022.Production.Product.DiscontinuedDate,\n    AdventureWorks2022.Production.Product.rowguid,\n    AdventureWorks2022.Production.Product.ModifiedDate\nFROM\n    AdventureWorks2022.Production.Product\nORDER BY\n    AdventureWorks2022.Production.Product.ListPrice DESC"
+        },
+        {
+            "role": "user",
+            "message": "give me the data of top 50 product as per the highest price and explain that "
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT TOP 50\n    AdventureWorks2022.Production.Product.Name,\n    AdventureWorks2022.Production.Product.ListPrice\nFROM\n    AdventureWorks2022.Production.Product\nORDER BY\n    AdventureWorks2022.Production.Product.ListPrice DESC"
+        },
+        {
+            "role": "user",
+            "message": "ok explain that data"
+        },
+        {
+            "role": "assistant",
+            "message": "Based on the provided data of the top 50 products ranked by their highest list price, here's an explanation:\n\n*   **Overall Price Range:** The products in this list represent your most expensive offerings, with prices ranging from $1431.50 (e.g., HL Road Frame) up to $3578.27 (Road-150 Red series).\n*   **Top Tier Products:** The absolute highest-priced product family is the \"Road-150 Red\" series, with all its variations (different sizes) priced at $3578.27. This is followed closely by the \"Mountain-100\" series (Silver and Black variations) in the $3374.99 - $3399.99 range.\n*   **Pricing Strategy by Model:** It's evident that entire product models, along with their various sizes and colors, are often priced identically. For example, all \"Road-150 Red\" models, all \"Mountain-100 Silver\" models, and all \"Road-250 Red\" and \"Road-250 Black\" models share the same list price within their respective groups. This suggests a consistent pricing structure across variations of a core product.\n*   **Dominant Product Types:** The majority of the high-priced items are complete \"Road,\" \"Mountain,\" and \"Touring\" bikes, along with \"HL Road Frames,\" indicating these are your premium product categories.\n*   **Distinct Price Tiers:** The data shows clear price segmentation. There are distinct price points for different product lines, such as:\n    *   ~$3500 for Road-150\n    *   ~$3300 for Mountain-100\n    *   ~$2400 for Road-250 and Touring-1000\n    *   ~$2300 for Mountain-200\n    *   ~$1700 for Road-350-W\n    *   ~$1400 for Road-450 and HL Road Frames\n*   **Implication for Sales & Marketing:** This list highlights your flagship and high-margin products. Understanding these top-tier items is crucial for strategic inventory management, targeted marketing campaigns towards premium customers, and analyzing profitability on high-value sales."
+        }
+    ]
+}

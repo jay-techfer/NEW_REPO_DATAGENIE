@@ -1,0 +1,28 @@
+{
+    "admin": [
+        {
+            "role": "user",
+            "message": "give me sales data"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    AdventureWorks2022.Sales.SalesOrderHeader.SalesOrderID,\n    AdventureWorks2022.Sales.SalesOrderHeader.RevisionNumber,\n    AdventureWorks2022.Sales.SalesOrderHeader.OrderDate,\n    AdventureWorks2022.Sales.SalesOrderHeader.DueDate,\n    AdventureWorks2022.Sales.SalesOrderHeader.ShipDate,\n    AdventureWorks2022.Sales.SalesOrderHeader.Status,\n    AdventureWorks2022.Sales.SalesOrderHeader.OnlineOrderFlag,\n    AdventureWorks2022.Sales.SalesOrderHeader.SalesOrderNumber,\n    AdventureWorks2022.Sales.SalesOrderHeader.PurchaseOrderNumber,\n    AdventureWorks2022.Sales.SalesOrderHeader.AccountNumber,\n    AdventureWorks2022.Sales.SalesOrderHeader.CustomerID,\n    AdventureWorks2022.Sales.SalesOrderHeader.SalesPersonID,\n    AdventureWorks2022.Sales.SalesOrderHeader.TerritoryID,\n    AdventureWorks2022.Sales.SalesOrderHeader.BillToAddressID,\n    AdventureWorks2022.Sales.SalesOrderHeader.ShipToAddressID,\n    AdventureWorks2022.Sales.SalesOrderHeader.ShipMethodID,\n    AdventureWorks2022.Sales.SalesOrderHeader.CreditCardID,\n    AdventureWorks2022.Sales.SalesOrderHeader.CreditCardApprovalCode,\n    AdventureWorks2022.Sales.SalesOrderHeader.CurrencyRateID,\n    AdventureWorks2022.Sales.SalesOrderHeader.SubTotal,\n    AdventureWorks2022.Sales.SalesOrderHeader.TaxAmt,\n    AdventureWorks2022.Sales.SalesOrderHeader.Freight,\n    AdventureWorks2022.Sales.SalesOrderHeader.TotalDue,\n    AdventureWorks2022.Sales.SalesOrderHeader.Comment,\n    AdventureWorks2022.Sales.SalesOrderHeader.rowguid,\n    AdventureWorks2022.Sales.SalesOrderHeader.ModifiedDate\nFROM\n    AdventureWorks2022.Sales.SalesOrderHeader"
+        },
+        {
+            "role": "user",
+            "message": "give me top sales data"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT TOP 10\n    AdventureWorks2022.Sales.vSalesPerson.FirstName,\n    AdventureWorks2022.Sales.vSalesPerson.MiddleName,\n    AdventureWorks2022.Sales.vSalesPerson.LastName,\n    AdventureWorks2022.Sales.vSalesPerson.JobTitle,\n    AdventureWorks2022.Sales.vSalesPerson.SalesYTD\nFROM\n    AdventureWorks2022.Sales.vSalesPerson\nORDER BY\n    AdventureWorks2022.Sales.vSalesPerson.SalesYTD DESC"
+        },
+        {
+            "role": "user",
+            "message": "give me top 5 sales "
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT TOP 5\n    AdventureWorks2022.Sales.vSalesPerson.FirstName,\n    AdventureWorks2022.Sales.vSalesPerson.MiddleName,\n    AdventureWorks2022.Sales.vSalesPerson.LastName,\n    AdventureWorks2022.Sales.vSalesPerson.SalesYTD\nFROM\n    AdventureWorks2022.Sales.vSalesPerson\nORDER BY\n    AdventureWorks2022.Sales.vSalesPerson.SalesYTD DESC"
+        }
+    ]
+}

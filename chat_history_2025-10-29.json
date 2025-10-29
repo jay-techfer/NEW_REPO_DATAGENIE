@@ -1,0 +1,20 @@
+{
+    "admin": [
+        {
+            "role": "user",
+            "message": "n"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n  AdventureWorks2022.Production.vProductModelCatalogDescription.Name\nFROM\n  AdventureWorks2022.Production.vProductModelCatalogDescription;"
+        },
+        {
+            "role": "user",
+            "message": "give me data of sales over 2012"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    AdventureWorks2022.Sales.SalesOrderHeader.SalesOrderID,\n    AdventureWorks2022.Sales.SalesOrderHeader.OrderDate,\n    AdventureWorks2022.Sales.SalesOrderHeader.TotalDue\nFROM\n    AdventureWorks2022.Sales.SalesOrderHeader\nWHERE\n    YEAR(AdventureWorks2022.Sales.SalesOrderHeader.OrderDate) = 2012"
+        }
+    ]
+}

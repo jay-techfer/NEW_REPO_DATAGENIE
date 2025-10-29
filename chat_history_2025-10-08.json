@@ -1,0 +1,68 @@
+{
+    "admin": [
+        {
+            "role": "user",
+            "message": "give me product details"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    AdventureWorks2022.Production.vProductModelCatalogDescription.ProductModelID,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Name,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Summary,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Manufacturer,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Copyright,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.ProductURL,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.WarrantyPeriod,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.WarrantyDescription,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.NoOfYears,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.MaintenanceDescription,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Wheel,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Saddle,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Pedal,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.BikeFrame,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Crankset,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.PictureAngle,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.PictureSize,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.ProductPhotoID,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Material,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Color,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.ProductLine,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.Style,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.RiderExperience,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.rowguid,\n    AdventureWorks2022.Production.vProductModelCatalogDescription.ModifiedDate\nFROM\n    AdventureWorks2022.Production.vProductModelCatalogDescription"
+        },
+        {
+            "role": "user",
+            "message": "give me data of sales for two consicutive years 2012 and 2013 for first quarter"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    YEAR(AdventureWorks2022.Sales.SalesOrderHeader.OrderDate) AS SalesYear,\n    SUM(AdventureWorks2022.Sales.SalesOrderHeader.TotalDue) AS TotalSalesQ1\nFROM\n    AdventureWorks2022.Sales.SalesOrderHeader\nWHERE\n    YEAR(AdventureWorks2022.Sales.SalesOrderHeader.OrderDate) IN (2012, 2013)\n    AND MONTH(AdventureWorks2022.Sales.SalesOrderHeader.OrderDate) BETWEEN 1 AND 3\nGROUP BY\n    YEAR(AdventureWorks2022.Sales.SalesOrderHeader.OrderDate)\nORDER BY\n    SalesYear"
+        },
+        {
+            "role": "user",
+            "message": "no i want all the columns for this no aggrigation"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    AdventureWorks2022.Sales.SalesOrderHeader.SalesOrderID,\n    AdventureWorks2022.Sales.SalesOrderHeader.RevisionNumber,\n    AdventureWorks2022.Sales.SalesOrderHeader.OrderDate,\n    AdventureWorks2022.Sales.SalesOrderHeader.DueDate,\n    AdventureWorks2022.Sales.SalesOrderHeader.ShipDate,\n    AdventureWorks2022.Sales.SalesOrderHeader.Status,\n    AdventureWorks2022.Sales.SalesOrderHeader.OnlineOrderFlag,\n    AdventureWorks2022.Sales.SalesOrderHeader.SalesOrderNumber,\n    AdventureWorks2022.Sales.SalesOrderHeader.PurchaseOrderNumber,\n    AdventureWorks2022.Sales.SalesOrderHeader.AccountNumber,\n    AdventureWorks2022.Sales.SalesOrderHeader.CustomerID,\n    AdventureWorks2022.Sales.SalesOrderHeader.SalesPersonID,\n    AdventureWorks2022.Sales.SalesOrderHeader.TerritoryID,\n    AdventureWorks2022.Sales.SalesOrderHeader.BillToAddressID,\n    AdventureWorks2022.Sales.SalesOrderHeader.ShipToAddressID,\n    AdventureWorks2022.Sales.SalesOrderHeader.ShipMethodID,\n    AdventureWorks2022.Sales.SalesOrderHeader.CreditCardID,\n    AdventureWorks2022.Sales.SalesOrderHeader.CreditCardApprovalCode,\n    AdventureWorks2022.Sales.SalesOrderHeader.CurrencyRateID,\n    AdventureWorks2022.Sales.SalesOrderHeader.SubTotal,\n    AdventureWorks2022.Sales.SalesOrderHeader.TaxAmt,\n    AdventureWorks2022.Sales.SalesOrderHeader.Freight,\n    AdventureWorks2022.Sales.SalesOrderHeader.TotalDue,\n    AdventureWorks2022.Sales.SalesOrderHeader.Comment,\n    AdventureWorks2022.Sales.SalesOrderHeader.rowguid,\n    AdventureWorks2022.Sales.SalesOrderHeader.ModifiedDate\nFROM\n    AdventureWorks2022.Sales.SalesOrderHeader\nWHERE\n    (YEAR(AdventureWorks2022.Sales.SalesOrderHeader.OrderDate) = 2012 AND MONTH(AdventureWorks2022.Sales.SalesOrderHeader.OrderDate) IN (1, 2, 3))\n    OR\n    (YEAR(AdventureWorks2022.Sales.SalesOrderHeader.OrderDate) = 2013 AND MONTH(AdventureWorks2022.Sales.SalesOrderHeader.OrderDate) IN (1, 2, 3))"
+        },
+        {
+            "role": "user",
+            "message": "give me employee details"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    AdventureWorks2022.HumanResources.vEmployee.BusinessEntityID,\n    AdventureWorks2022.HumanResources.vEmployee.Title,\n    AdventureWorks2022.HumanResources.vEmployee.FirstName,\n    AdventureWorks2022.HumanResources.vEmployee.MiddleName,\n    AdventureWorks2022.HumanResources.vEmployee.LastName,\n    AdventureWorks2022.HumanResources.vEmployee.Suffix,\n    AdventureWorks2022.HumanResources.vEmployee.JobTitle,\n    AdventureWorks2022.HumanResources.vEmployee.PhoneNumber,\n    AdventureWorks2022.HumanResources.vEmployee.PhoneNumberType,\n    AdventureWorks2022.HumanResources.vEmployee.EmailAddress,\n    AdventureWorks2022.HumanResources.vEmployee.EmailPromotion,\n    AdventureWorks2022.HumanResources.vEmployee.AddressLine1,\n    AdventureWorks2022.HumanResources.vEmployee.AddressLine2,\n    AdventureWorks2022.HumanResources.vEmployee.City,\n    AdventureWorks2022.HumanResources.vEmployee.StateProvinceName,\n    AdventureWorks2022.HumanResources.vEmployee.PostalCode,\n    AdventureWorks2022.HumanResources.vEmployee.CountryRegionName,\n    AdventureWorks2022.HumanResources.vEmployee.AdditionalContactInfo\nFROM\n    AdventureWorks2022.HumanResources.vEmployee"
+        },
+        {
+            "role": "user",
+            "message": "give me 2012 sales data"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    SUM(AdventureWorks2022.Sales.SalesOrderHeader.TotalDue) AS TotalSales2012\nFROM\n    AdventureWorks2022.Sales.SalesOrderHeader\nWHERE\n    YEAR(AdventureWorks2022.Sales.SalesOrderHeader.OrderDate) = 2012"
+        },
+        {
+            "role": "user",
+            "message": "i want all the columns"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    AdventureWorks2022.Sales.SalesOrderHeader.SalesOrderID,\n    AdventureWorks2022.Sales.SalesOrderHeader.RevisionNumber,\n    AdventureWorks2022.Sales.SalesOrderHeader.OrderDate,\n    AdventureWorks2022.Sales.SalesOrderHeader.DueDate,\n    AdventureWorks2022.Sales.SalesOrderHeader.ShipDate,\n    AdventureWorks2022.Sales.SalesOrderHeader.Status,\n    AdventureWorks2022.Sales.SalesOrderHeader.OnlineOrderFlag,\n    AdventureWorks2022.Sales.SalesOrderHeader.SalesOrderNumber,\n    AdventureWorks2022.Sales.SalesOrderHeader.PurchaseOrderNumber,\n    AdventureWorks2022.Sales.SalesOrderHeader.AccountNumber,\n    AdventureWorks2022.Sales.SalesOrderHeader.CustomerID,\n    AdventureWorks2022.Sales.SalesOrderHeader.SalesPersonID,\n    AdventureWorks2022.Sales.SalesOrderHeader.TerritoryID,\n    AdventureWorks2022.Sales.SalesOrderHeader.BillToAddressID,\n    AdventureWorks2022.Sales.SalesOrderHeader.ShipToAddressID,\n    AdventureWorks2022.Sales.SalesOrderHeader.ShipMethodID,\n    AdventureWorks2022.Sales.SalesOrderHeader.CreditCardID,\n    AdventureWorks2022.Sales.SalesOrderHeader.CreditCardApprovalCode,\n    AdventureWorks2022.Sales.SalesOrderHeader.CurrencyRateID,\n    AdventureWorks2022.Sales.SalesOrderHeader.SubTotal,\n    AdventureWorks2022.Sales.SalesOrderHeader.TaxAmt,\n    AdventureWorks2022.Sales.SalesOrderHeader.Freight,\n    AdventureWorks2022.Sales.SalesOrderHeader.TotalDue,\n    AdventureWorks2022.Sales.SalesOrderHeader.Comment,\n    AdventureWorks2022.Sales.SalesOrderHeader.rowguid,\n    AdventureWorks2022.Sales.SalesOrderHeader.ModifiedDate\nFROM\n    AdventureWorks2022.Sales.SalesOrderHeader"
+        },
+        {
+            "role": "user",
+            "message": "i want whole sales data for year 2012"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    AdventureWorks2022.Sales.SalesOrderHeader.*\nFROM\n    AdventureWorks2022.Sales.SalesOrderHeader\nWHERE\n    YEAR(AdventureWorks2022.Sales.SalesOrderHeader.OrderDate) = 2012"
+        },
+        {
+            "role": "user",
+            "message": "give me employees data"
+        },
+        {
+            "role": "assistant",
+            "message": "SELECT\n    AdventureWorks2022.HumanResources.vEmployee.BusinessEntityID,\n    AdventureWorks2022.HumanResources.vEmployee.Title,\n    AdventureWorks2022.HumanResources.vEmployee.FirstName,\n    AdventureWorks2022.HumanResources.vEmployee.MiddleName,\n    AdventureWorks2022.HumanResources.vEmployee.LastName,\n    AdventureWorks2022.HumanResources.vEmployee.Suffix,\n    AdventureWorks2022.HumanResources.vEmployee.JobTitle,\n    AdventureWorks2022.HumanResources.vEmployee.PhoneNumber,\n    AdventureWorks2022.HumanResources.vEmployee.PhoneNumberType,\n    AdventureWorks2022.HumanResources.vEmployee.EmailAddress,\n    AdventureWorks2022.HumanResources.vEmployee.EmailPromotion,\n    AdventureWorks2022.HumanResources.vEmployee.AddressLine1,\n    AdventureWorks2022.HumanResources.vEmployee.AddressLine2,\n    AdventureWorks2022.HumanResources.vEmployee.City,\n    AdventureWorks2022.HumanResources.vEmployee.StateProvinceName,\n    AdventureWorks2022.HumanResources.vEmployee.PostalCode,\n    AdventureWorks2022.HumanResources.vEmployee.CountryRegionName,\n    AdventureWorks2022.HumanResources.vEmployee.AdditionalContactInfo\nFROM\n    AdventureWorks2022.HumanResources.vEmployee"
+        }
+    ]
+}
