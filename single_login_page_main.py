@@ -20,7 +20,7 @@ import requests
 from datetime import datetime
 
 
-genai.configure(api_key="AIzaSyC0T1vRMxg8r2Ma75sit71SWFHGyKpwRso")
+genai.configure(api_key="AIzaSyD09VntQLgT1aPBbZOG6s4zCUnbyREx2Bg")
 model = genai.GenerativeModel("gemini-2.5-flash")
 
 # 🔹 Streamlit config

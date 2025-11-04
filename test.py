@@ -4,6 +4,7 @@ import pandas as pd
 import urllib
 # import pyodbc
 import re
+import sqlalchemy
 from sqlalchemy import create_engine, text
 import google.generativeai as genai
 import plotly.express as px
@@ -17,9 +18,9 @@ from cryptography.fernet import Fernet
 import secrets
 import streamlit.components.v1 as components
 import requests
+import tiktoken
 
-
-genai.configure(api_key="AIzaSyC0T1vRMxg8r2Ma75sit71SWFHGyKpwRso")
+genai.configure(api_key="AIzaSyD09VntQLgT1aPBbZOG6s4zCUnbyREx2Bg")
 model = genai.GenerativeModel("gemini-2.5-flash")
 
 # 🔹 Streamlit config
@@ -78,8 +79,8 @@ engine = create_engine(
 # ----------------- Encryption Key -----------------
 fernet_key = b'Sv_cBtT5H5i_fv3sPvRrAe_2z6WRnqbmq-rmfxUyiGQ='
 cipher_suite = Fernet(fernet_key)
-RECAPTCHA_SECRET_KEY = "6LfkXZQrAAAAAKIosm2eIEKwzw6AmblfqY8NDb3D"   # from Google
-RECAPTCHA_SITE_KEY = "6LfkXZQrAAAAANLCHFVeHYym1YO0F_6aa9mcbziC"
+# RECAPTCHA_SECRET_KEY = "6LfkXZQrAAAAAKIosm2eIEKwzw6AmblfqY8NDb3D"   # from Google
+# RECAPTCHA_SITE_KEY = "6LfkXZQrAAAAANLCHFVeHYym1YO0F_6aa9mcbziC"
 
 
 def get_user_credentials():
@@ -90,24 +91,24 @@ def get_user_credentials():
         return {row[0]: row[1] for row in rows}
 
 
-def verify_recaptcha(token):
-    url = "https://www.google.com/recaptcha/api/siteverify"
-    response = requests.post(url, data={
-        "secret": RECAPTCHA_SECRET_KEY,
-        "response": token
-    })
-    return response.json().get("success", False)
+# def verify_recaptcha(token):
+#     url = "https://www.google.com/recaptcha/api/siteverify"
+#     response = requests.post(url, data={
+#         "secret": RECAPTCHA_SECRET_KEY,
+#         "response": token
+#     })
+#     return response.json().get("success", False)
 
 # -------------------- SHOW VISIBLE CAPTCHA --------------------
 
 
-def show_recaptcha():
-    """Display Google reCAPTCHA v2 checkbox."""
-    recaptcha_html = f"""
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <div class="g-recaptcha" data-sitekey="{RECAPTCHA_SITE_KEY}"></div>
-    """
-    components.html(recaptcha_html, height=100)
+# def show_recaptcha():
+#     """Display Google reCAPTCHA v2 checkbox."""
+#     recaptcha_html = f"""
+#     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+#     <div class="g-recaptcha" data-sitekey="{RECAPTCHA_SITE_KEY}"></div>
+#     """
+#     components.html(recaptcha_html, height=100)
 
 
 def login_page():
@@ -281,7 +282,31 @@ def landing_page():
             except Exception as e:
                 st.warning(f"SSMS Error: {e}")
         return pd.concat(data, ignore_index=True) if data else pd.DataFrame()
+    
+    def log_token_usage(text, csv_path="token_usage.csv"):
+        enc = tiktoken.encoding_for_model("gpt-4o")
+        tokens = enc.encode(text)
+        tokens_used = len(tokens)
+        today = date.today().strftime("%Y-%m-%d")
 
+        # Create or read existing file
+        if os.path.exists(csv_path):
+            df = pd.read_csv(csv_path)
+        else:
+            df = pd.DataFrame(columns=["Date", "Token_Count"])
+
+        # If today already exists → add tokens
+        if today in df["Date"].values:
+            df.loc[df["Date"] == today, "Token_Count"] += tokens_used
+        else:
+            df = pd.concat([df, pd.DataFrame([{"Date": today, "Token_Count": tokens_used}])], ignore_index=True)
+
+        # Save file
+        df.to_csv(csv_path, index=False)
+        print(f"✅ {tokens_used} tokens added for {today}. Today's total: {df.loc[df['Date'] == today, 'Token_Count'].values[0]}")
+
+        return df
+    
     def build_chat_context():
         conversation = []
         for msg in st.session_state.chat_history:
@@ -313,6 +338,7 @@ def landing_page():
                     -- SSMS Query Start
                     <SQL>
                 """
+        log_token_usage(prompt)
         return model.generate_content(prompt).text
 
     def detect_mode(user_text):
@@ -337,6 +363,7 @@ def landing_page():
         DO NOT GIVE PYTHON CODE
         Output ONLY one of the following words: Query, Descriptive, Diagnostic, Predictive, Prescriptive.
         """
+        log_token_usage(classification_prompt)
         response = model.generate_content(classification_prompt).text.strip()
         return response
 
@@ -375,7 +402,6 @@ def landing_page():
             if st.button("🚪 Logout"):
                 username_for_db = st.session_state.username
 
-                # 🧩 Recreate connection
                 server_cfg = ssms_servers[0]
                 conn_str = (
                     f"Driver={{ODBC Driver 17 for SQL Server}};"
@@ -506,10 +532,11 @@ def landing_page():
                                     - Before plotting, drop any rows where required columns (like X, Y, hierarchy path, or value columns) are null, NaN, or blank strings ('').
                                     - Output only the Python code inside a markdown code block.
                                     """
-
+                            log_token_usage(chart_gen_prompt)
                             try:
                                 response = model.generate_content(
                                     chart_gen_prompt).text
+                                log_token_usage(response)
                                 print("chart code : ", response)
                                 chart_code = re.search(
                                     r"```python(.*?)```", response, re.DOTALL)
@@ -548,7 +575,6 @@ def landing_page():
                             st.session_state.pop("generated_chart_code", None)
 
                         except st.errors.StreamlitAPIException:
-                            # st.warning("⚠️ Parent data changed — please reselect columns or regenerate the chart.")
                             st.session_state.pop("generated_chart_code", None)
 
                         except Exception as e:
@@ -637,47 +663,49 @@ def landing_page():
             else:
                 st.chat_message("assistant").write(str(chat["message"]))
 
-    MAX_QUESTIONS_PER_DAY = 5
+    # MAX_QUESTIONS_PER_DAY = 5
 
-    user_message_count = sum(1 for msg in history[current_user] if msg.get("role") == "user")
-    remaining_questions = MAX_QUESTIONS_PER_DAY - user_message_count
+    # user_message_count = sum(1 for msg in history[current_user] if msg.get("role") == "user")
+    # remaining_questions = MAX_QUESTIONS_PER_DAY - user_message_count
 
-    # Show remaining question count
-    if remaining_questions > 0:
-        # st.info(f"💬 You have {remaining_questions} question{'s' if remaining_questions > 1 else ''} left for today.")
-        message = f"💬 You have {remaining_questions} question{'s' if remaining_questions > 1 else ''} left for today..."
+    # # Show remaining question count
+    # if remaining_questions > 0:
+    #     # st.info(f"💬 You have {remaining_questions} question{'s' if remaining_questions > 1 else ''} left for today.")
+    #     message = f"💬 You have {remaining_questions} question{'s' if remaining_questions > 1 else ''} left for today..."
 
-        st.markdown(
-            f"""
-            <div style="
-                background-color:rgba(255, 244, 230, 0.4); 
-                # padding:10px; 
-                # border-radius:2px; 
-                # border:1px solid #FFA726;
-                color:#BF360C;
-                font-size:16px;
-                ">
-                {message}
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+    #     st.markdown(
+    #         f"""
+    #         <div style="
+    #             background-color:rgba(255, 244, 230, 0.4); 
+    #             # padding:10px; 
+    #             # border-radius:2px; 
+    #             # border:1px solid #FFA726;
+    #             color:#BF360C;
+    #             font-size:16px;
+    #             ">
+    #             {message}
+    #         </div>
+    #         """,
+    #         unsafe_allow_html=True
+    #     )
         # --- Chat input enabled ---
-        user_input = st.chat_input("Type your question...")
-    else:
-        st.error("⚠️ Daily limit of 20 questions reached. Please try again tomorrow.")
-        # --- Chat input disabled ---
-        st.chat_input("Type your question...", disabled=True)
-        user_input = None
-
+    #     user_input = st.chat_input("Type your question...")
+    # else:
+    #     st.error("⚠️ Daily limit of 20 questions reached. Please try again tomorrow.")
+    #     # --- Chat input disabled ---
+    #     st.chat_input("Type your question...", disabled=True)
+    #     user_input = None
+    user_input = st.chat_input("Type your question...")
     if user_input:
-        mode = detect_mode(user_input)   # <-- Auto mode detection here
+        mode = detect_mode(user_input)
+        log_token_usage(mode)   # <-- Auto mode detection here
         print(mode)
         if mode == "Query":
             schema_text = re.sub(
                 r'\s{2,}', ' ', ssms_schema_df.to_string(index=False).strip())
             sql_text = gen_join_queries(
                 user_input, schema_text, history_text)
+            log_token_usage(sql_text)
             # print("sql query:", sql_text)
             cleaned_output = sql_text.replace("sql", "").strip()
             match = re.search(r"--\s*SSMS Query Start\s*(.*)",
@@ -782,6 +810,7 @@ def landing_page():
 
                     Respond in bullet points with clear insights.
                 """
+                log_token_usage(prompt)
             else:
                 prompt = f"""
                     Conversation so far:
@@ -791,10 +820,11 @@ def landing_page():
                     User asked: \"{user_input}\"
                     Respond in 4-5 bullet points with useful analysis/suggestions.
                     """
+                log_token_usage(prompt)
 
             try:
                 reply = model.generate_content(prompt).text
-
+                log_token_usage(reply)
                 # Add assistant reply to chat
                 st.session_state.chat_history.append(
                     {"role": "assistant", "message": reply}
